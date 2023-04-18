@@ -36,11 +36,13 @@ export default function (initFunction, animationFunction) {
                     "enemies": [
                         {
                             "type": [
-                                "sniper"
+                                "shield",
+                                "pull",
+                                "push"
                             ],
                             "radius": 30,
                             "speed": 4,
-                            "amount": 4
+                            "amount": 40
                         }
                     ]
                 },

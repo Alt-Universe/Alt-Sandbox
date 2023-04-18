@@ -37,9 +37,9 @@ class Entity {
         if (data.x) {
             if (typeof data.x == 'string') {
                 if (data.x.endsWith('t')) {
-                    mx = this.spawner.x + data.x.slice(0, -1) * this.tile - 15
+                    mx = this.spawner.x + data.x.slice(0, -1) * 32 - 15
                 } else if (data.x.endsWith('tn')) {
-                    mx = this.spawner.x + w - data.x.slice(0, -2) * this.tile + 15
+                    mx = this.spawner.x + w - data.x.slice(0, -2) * 32 + 15
                 } else
                     mx = this.spawner.x + eval(data.x)
             } else {
@@ -49,9 +49,9 @@ class Entity {
         if (data.y) {
             if (typeof data.y == 'string') {
                 if (data.y.endsWith('t')) {
-                    my = this.spawner.y + data.y.slice(0, -1) * this.tile - 15
+                    my = this.spawner.y + data.y.slice(0, -1) * 32 - 15
                 } else if (data.x.endsWith('tn')) {
-                    my = this.spawner.y + h - data.y.slice(0, -2) * this.tile + 15
+                    my = this.spawner.y + h - data.y.slice(0, -2) * 32 + 15
                 } else {
                     my = this.spawner.y + eval(data.y)
                 }
@@ -93,7 +93,7 @@ class Entity {
         }
         ctx.beginPath()
         ctx.fillStyle = this.color
-        ctx.globalAlpha = (this.harmless ? 0.4 : 1) || this.alpha
+        ctx.globalAlpha = this.alpha != 1 ? this.alpha : (this.harmless ? 0.4 : 1)
         ctx.strokeStyle = "#111"
         ctx.lineWidth = 3
         ctx.arc((this.pos.x - off.x) / fov, (this.pos.y - off.y) / fov, this.radius, 0, 3.145 * 2)
@@ -1332,6 +1332,7 @@ let enemiesTypes = {
             this.color = "#29ffc6"
             this.auraAlpha = 0.3
             this.auraColor = "rgb(41, 255, 198)"
+            this.aura = data.aura != undefined ? data.aura : 90
         }
     },
     "tree": class Tree extends Entity {
@@ -1412,26 +1413,34 @@ let enemiesTypes = {
         constructor(data) {
             super(data)
             this.color = "#78148C"
+            this.auraColor = this.color
+            this.aura = data.aura != undefined ? data.aura : 150
         }
     },
     "push": class Push extends Entity {
         constructor(data) {
             super(data)
             this.color = "#7B9DB2"
+            this.auraColor = this.color
+            this.aura = data.aura != undefined ? data.aura : 150
         }
     },
     "slippery": class Slippery extends Entity {
         constructor(data) {
             super(data)
             this.color = "#1AACBF"
+            this.auraColor = this.color
             this.auraAlpha = 0.5
+            this.aura = data.aura != undefined ? data.aura : 150
         }
     },
     "enlarging": class Enlarging extends Entity {
         constructor(data) {
             super(data)
             this.color = "#4d0163"
+            this.auraColor = this.color
             this.auraAlpha = 0.5
+            this.aura = data.aura != undefined ? data.aura : 150
         }
     },
     "zigzag": class Zigzag extends Entity {
@@ -1468,7 +1477,9 @@ let enemiesTypes = {
         constructor(data) {
             super(data)
             this.color = "#00C700"
+            this.auraColor = this.color
             this.auraAlpha = 0.2
+            this.aura = data.aura != undefined ? data.aura : 150
         }
     },
     "speedsniper": class Speedsniper extends Entity {
@@ -1921,6 +1932,20 @@ let enemiesTypes = {
                 this.starPos = !this.starPos
                 this.timer = this.timer % 500
             }
+        }
+    },
+    "pullghost": class Pullghost extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#78148C"
+            this.harmless = true
+        }
+    },
+    "pushghost": class Pushghost extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#7B9DB2"
+            this.harmless = true
         }
     }
 }
