@@ -123,6 +123,8 @@ export default class {
         }
     }
 
+    kill() {}
+
     colide(boundary) {
         let x = boundary.x
         let y = boundary.y

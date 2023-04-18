@@ -6,7 +6,7 @@ function random(min, max) {
 
 class Entity {
     constructor(data) {
-        this.type = data.type
+        this.color = data.color
         this.radius = data.radius
         this.aura = data.aura
         this.speed = data.speed
@@ -77,6 +77,8 @@ class Entity {
         this.angle = data.angle
 
         this.nestedEntities = []
+        this.alpha = 1
+        this.harmless = false
     }
 
     draw(ctx, off, fov) {
@@ -91,7 +93,7 @@ class Entity {
         }
         ctx.beginPath()
         ctx.fillStyle = this.color
-        ctx.globalAlpha = 1
+        ctx.globalAlpha = (this.harmless ? 0.4 : 1) || this.alpha
         ctx.strokeStyle = "#111"
         ctx.lineWidth = 3
         ctx.arc((this.pos.x - off.x) / fov, (this.pos.y - off.y) / fov, this.radius, 0, 3.145 * 2)
@@ -104,6 +106,8 @@ class Entity {
         this.behavior(timeFix, delta, player)
         this.move(timeFix, this.friction)
         this.colide(this.spawner)
+
+        this.speedMultiplier = 1
     }
 
     behavior(timeFix) {
@@ -153,11 +157,11 @@ class Entity {
 
     interact(player, data) {
         /*if (!player.god && !this.mirage) {
-            if (this.d(player.position.x, player.position.y, this.pos.x, this.pos.y) <= this.radius + player.radius && !player.onSafe && !this.harmless) {
-                this.corrosive ? player.ckill() : player.kill()
+            if (this.d(player.pos.x, player.pos.y, this.pos.x, this.pos.y) <= this.radius + player.radius && !player.onSafe && !this.harmless) {
+                
             }
             if (this.aura != undefined && this.aura > 0) {
-                if (this.d(player.position.x, player.position.y, this.pos.x, this.pos.y) <= this.aura + player.radius && !player.onSafe) {
+                if (this.d(player.pos.x, player.pos.y, this.pos.x, this.pos.y) <= this.aura + player.radius && !player.onSafe) {
                     this.auraEffect(player, data)
                 }
             }
@@ -214,20 +218,162 @@ class Entity {
     }
 }
 
-export default {
+class Bullet extends Entity {
+    constructor(data) {
+        super(data)
+        this.color = "#A05353"
+        this.timer = 0
+        this.releaseTime = 3000
+    }
+
+    behavior(timeFix, delta) {
+        this.timer += delta
+        console.log(this.timer)
+        if (this.timer > this.releaseTime) {
+            this.toRemove = true
+        }
+    }
+
+    interact(player) {
+        if (!player.onSafe) {
+            if (this.d(player.pos.x, player.pos.y, this.pos.x, this.pos.y) <= this.radius + player.radius && !player.onSafe) {
+                player.kill()
+                this.toRemove = true
+            }
+        }
+    }
+
+    interractWall(zone) {
+        let { radius } = this
+        let x1 = this.pos.x
+        let y1 = this.pos.y
+        if (zone.checkOverlap(this.radius, this.pos.x, this.pos.y, zone.x, zone.y, zone.w, zone.h)) {
+            if (
+                zone.lineal(
+                    { x: zone.x, y: zone.y },
+                    { x: zone.x + zone.w, y: zone.y + zone.h },
+                    { x: x1, y: y1 }
+                )
+            ) {
+                if (
+                    zone.lineal(
+                        { x: zone.x + zone.w, y: zone.y },
+                        { x: zone.x, y: zone.y + zone.h },
+                        { x: x1, y: y1 }
+                    )
+                ) {
+                    this.pos.x = zone.x + zone.w + radius + 1
+                    this.vel.x = Math.abs(this.vel.x)
+                    this.toRemove = true
+                    // consolthis.log('right')
+                } else {
+                    this.pos.y = zone.y - radius - 1
+                    this.vel.y = -Math.abs(this.vel.y)
+                    this.toRemove = true
+                    // consolthis.log('top')
+                }
+            } else {
+                if (
+                    zone.lineal(
+                        { x: zone.x + zone.w, y: zone.y },
+                        { x: zone.x, y: zone.y + zone.h },
+                        { x: x1, y: y1 }
+                    )
+                ) {
+                    this.pos.y = zone.y + zone.h + radius + 1
+                    this.vel.y = Math.abs(this.vel.y)
+                    this.toRemove = true
+                } else {
+                    this.pos.x = zone.x - radius - 1
+                    this.vel.x = -Math.abs(this.vel.x)
+                    this.toRemove = true
+                }
+            }
+        }
+    }
+
+    colide(boundary) {
+        if (this.pos.x - this.radius < boundary.x) {
+            this.toRemove = true
+        }
+        if (this.pos.x + this.radius > boundary.x + boundary.w) {
+            this.toRemove = true
+        }
+        if (this.pos.y - this.radius < boundary.y) {
+            this.toRemove = true
+        }
+        if (this.pos.y + this.radius > boundary.y + boundary.h) {
+            this.toRemove = true
+        }
+    }
+}
+
+class Trail extends Entity {
+    constructor(data) {
+        super(data)
+        this.color = "flametrail"
+        this.timer = 0
+        this.alpha = 1
+        this.ownerSpeed = data.ownerSpeed
+
+    }
+
+    behavior(timeFix, delta, area) {
+        this.timer += delta
+        this.alpha = 1 - this.timer / (5000 / this.ownerSpeed)
+        if (this.timer >= 5000 / this.ownerSpeed) this.toRemove = true;
+    }
+}
+
+class Leafbullet extends Entity {
+    constructor(data) {
+        super(data)
+        this.color = "#035b12"
+        this.timer = 0
+        this.weak = true
+        this.dir = data.speed / 150
+    }
+
+    behavior(timeFix, delta) {
+        this.velToAngle()
+        this.angle += this.dir * (delta / 30)
+        this.angleToVel()
+        this.timer += delta
+        if (this.timer >= 2000) {
+            this.toRemove = true
+        }
+    }
+
+    colide(boundary) {
+        if (this.pos.x - this.radius < boundary.x) {
+            this.toRemove = true
+        }
+        if (this.pos.x + this.radius > boundary.x + boundary.w) {
+            this.toRemove = true
+        }
+        if (this.pos.y - this.radius < boundary.y) {
+            this.toRemove = true
+        }
+        if (this.pos.y + this.radius > boundary.y + boundary.h) {
+            this.toRemove = true
+        }
+    }
+}
+
+let enemiescolors = {
     "normal": class Normal extends Entity {
         constructor(data) {
             super(data)
             this.color = "#939393"
         }
     },
-    "black": class Normal extends Entity {
+    "black": class Black extends Entity {
         constructor(data) {
             super(data)
             this.color = "#000"
         }
     },
-    "slower": class Normal extends Entity {
+    "slower": class Slower extends Entity {
         constructor(data) {
             super(data)
             this.color = "red"
@@ -235,7 +381,7 @@ export default {
             this.auraColor = "red"
         }
     },
-    "draining": class Normal extends Entity {
+    "draining": class Draining extends Entity {
         constructor(data) {
             super(data)
             this.color = "blue"
@@ -243,7 +389,7 @@ export default {
             this.auraColor = "blue"
         }
     },
-    "freezing": class Normal extends Entity {
+    "freezing": class Freezing extends Entity {
         constructor(data) {
             super(data)
             this.color = "#64C1B9"
@@ -252,7 +398,7 @@ export default {
             this.auraColor = this.color
         }
     },
-    "disabler": class Normal extends Entity {
+    "disabler": class Disabler extends Entity {
         constructor(data) {
             super(data)
             this.color = "#A87C86"
@@ -261,18 +407,18 @@ export default {
             this.auraColor = "rgb(255, 191, 206)"
         }
     },
-    "shutter": class Normal extends Entity {
+    "shutter": class Shutter extends Entity {
         constructor(data) {
             super(data)
             this.color = "#003c66"
             this.realVel = new Vector(this.vel.x, this.vel.y)
 
             this.timer = 0
-    
+
             this.friction = 0.030
             this.dashed = false
         }
-    
+
         behavior(timeFix, delta) {
             this.timer += delta
             if (this.timer > 4500) {
@@ -285,7 +431,7 @@ export default {
                 this.dashed = true
             }
         }
-    
+
         colide(boundary) {
             if (this.pos.x - this.radius < boundary.x) {
                 this.pos.x = boundary.x + this.radius
@@ -309,7 +455,7 @@ export default {
             }
         }
     },
-    "icicle": class Normal extends Entity {
+    "icicle": class Icicle extends Entity {
         constructor(data) {
             super(data)
             this.color = "#adf8ff"
@@ -323,7 +469,7 @@ export default {
             this.wallHit = false
             this.timer = 0
         }
-    
+
         behavior(timerFix, delta) {
             if (this.wallHit) {
                 this.timer += delta
@@ -335,7 +481,7 @@ export default {
                 }
             }
         }
-    
+
         interractWall(zone) {
             let { radius } = this
             let x1 = this.pos.x
@@ -388,7 +534,7 @@ export default {
                 }
             }
         }
-    
+
         colide(boundary) {
             super.colide(boundary)
             if (this.pos.x == boundary.x + boundary.w - this.radius || this.pos.x == boundary.x + this.radius) {
@@ -511,5 +657,1280 @@ export default {
             }
             super.colide(boundary)
         }
+    },
+    "bee": class Bee extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#A0780A"
+
+            this.targetAngle = this.angle
+        }
+        behavior(timeFix, delta, player) {
+            let min = 5.625 * 32
+            let index
+            if (!player.onSafe)
+                if (this.d(player.pos.x, player.pos.y, this.pos.x, this.pos.y) <= min && !player.onSafe) {
+                    min = this.d(player.pos.x, player.pos.y, this.pos.x, this.pos.y)
+                    index = player
+                }
+            if (index != undefined) {
+                let dX = index.pos.x - this.pos.x
+                let dY = index.pos.y - this.pos.y
+                this.targetAngle = Math.atan2(dY, dX)
+            }
+            this.velToAngle()
+            let dif = this.targetAngle - this.angle
+            let angleDif = Math.atan2(Math.sin(dif), Math.cos(dif))
+            let angleIncrement = 0.04
+            if (Math.abs(angleDif) >= angleIncrement) {
+                if (angleDif < 0) {
+                    this.angle -= angleIncrement * (delta / 30)
+                } else {
+                    this.angle += angleIncrement * (delta / 30)
+                }
+            }
+            this.angleToVel()
+        }
+
+        colide(boundary) {
+            if (this.pos.x - this.radius < boundary.x) {
+                this.pos.x = boundary.x + this.radius
+                this.vel.x = Math.abs(this.vel.x)
+                this.velToAngle()
+                this.targetAngle = this.angle
+            }
+            if (this.pos.x + this.radius > boundary.x + boundary.w) {
+                this.pos.x = boundary.x + boundary.w - this.radius
+                this.vel.x = -Math.abs(this.vel.x)
+                this.velToAngle()
+                this.targetAngle = this.angle
+            }
+            if (this.pos.y - this.radius < boundary.y) {
+                this.pos.y = boundary.y + this.radius
+                this.vel.y = Math.abs(this.vel.y)
+                this.velToAngle()
+                this.targetAngle = this.angle
+            }
+            if (this.pos.y + this.radius > boundary.y + boundary.h) {
+                this.pos.y = boundary.y + boundary.h - this.radius
+                this.vel.y = -Math.abs(this.vel.y)
+                this.velToAngle()
+                this.targetAngle = this.angle
+            }
+        }
+    },
+    "dasher": class Dasher extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#6789EF"
+        }
+        interact(player, data) {
+            if (this.d(player.pos.x, player.pos.y, this.pos.x, this.pos.y) <= 32 * 5 + player.radius && !player.onSafe) {
+                this.speedMultiplier = 5
+            }
+        }
+    },
+    "spiral": class Spiral extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#D1C732"
+            this.angleIncrement = 0.15
+            this.angleIncrementChange = 0.004
+            this.dir = 1
+        }
+
+        behavior(timeFix, delta) {
+            if (this.angleIncrement < 0.001) {
+                this.angleAdd = true;
+            } else if (this.angleIncrement > 0.35) {
+                this.angleAdd = false;
+            }
+            if (this.angleIncrement < 0.05) {
+                this.angleIncrementChange = 0.0022;
+            } else {
+                this.angleIncrementChange = 0.004;
+            }
+            if (this.angleAdd) {
+                this.angleIncrement += this.angleIncrementChange * timeFix;
+            } else {
+                this.angleIncrement -= this.angleIncrementChange * timeFix;
+            }
+            this.velToAngle();
+            this.angle += this.angleIncrement * this.dir * timeFix;
+            this.angleToVel();
+        }
+
+        interractWall(zone) {
+            let { radius } = this
+            let x1 = this.pos.x
+            let y1 = this.pos.y
+            if (zone.checkOverlap(this.radius, this.pos.x, this.pos.y, zone.x, zone.y, zone.w, zone.h)) {
+                if (
+                    zone.lineal(
+                        { x: zone.x, y: zone.y },
+                        { x: zone.x + zone.w, y: zone.y + zone.h },
+                        { x: x1, y: y1 }
+                    )
+                ) {
+                    if (
+                        zone.lineal(
+                            { x: zone.x + zone.w, y: zone.y },
+                            { x: zone.x, y: zone.y + zone.h },
+                            { x: x1, y: y1 }
+                        )
+                    ) {
+                        this.pos.x = zone.x + zone.w + radius + 1
+                        this.vel.x = Math.abs(this.vel.x)
+                        this.dir = -this.dir
+                        // consolthis.log('right')
+                    } else {
+                        this.pos.y = zone.y - radius - 1
+                        this.vel.y = -Math.abs(this.vel.y)
+                        this.dir = -this.dir
+                        // consolthis.log('top')
+                    }
+                } else {
+                    if (
+                        zone.lineal(
+                            { x: zone.x + zone.w, y: zone.y },
+                            { x: zone.x, y: zone.y + zone.h },
+                            { x: x1, y: y1 }
+                        )
+                    ) {
+                        this.pos.y = zone.y + zone.h + radius + 1
+                        this.vel.y = Math.abs(this.vel.y)
+                        this.dir = -this.dir
+                    } else {
+                        this.pos.x = zone.x - radius - 1
+                        this.vel.x = -Math.abs(this.vel.x)
+                        this.dir = -this.dir
+                    }
+                }
+            }
+        }
+
+        colide(boundary) {
+            if (this.pos.x - this.radius < boundary.x) {
+                this.pos.x = boundary.x + this.radius
+                this.vel.x = Math.abs(this.vel.x)
+                this.dir = -this.dir
+            }
+            if (this.pos.x + this.radius > boundary.x + boundary.w) {
+                this.pos.x = boundary.x + boundary.w - this.radius
+                this.vel.x = -Math.abs(this.vel.x)
+                this.dir = -this.dir
+            }
+            if (this.pos.y - this.radius < boundary.y) {
+                this.pos.y = boundary.y + this.radius
+                this.vel.y = Math.abs(this.vel.y)
+                this.dir = -this.dir
+            }
+            if (this.pos.y + this.radius > boundary.y + boundary.h) {
+                this.pos.y = boundary.y + boundary.h - this.radius
+                this.vel.y = -Math.abs(this.vel.y)
+                this.dir = -this.dir
+            }
+        }
+    },
+    "rush": class Rush extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#ecc4ef"
+            this.aura = data.aura != undefined ? data.aura : 150
+            this.auraStatic = data.aura != undefined ? data.aura : 150
+
+            this.gravity = data.power || 2.5
+        }
+
+        auraEffect(player, data) {
+            let dx = player.pos.x - this.pos.x
+            let dy = player.pos.y - this.pos.y
+            let dist = this.d(player.pos.x, player.pos.y, this.pos.x, this.pos.y)
+            let attractAmplitude = Math.pow(2, -(dist / 120))
+            let moveDist = this.gravity * attractAmplitude
+            let angle = Math.atan2(dy, dx)
+            let timeFix = data.timeFix
+            player.globalpos.x += (moveDist * Math.cos(angle)) * timeFix
+            player.globalpos.y += (moveDist * Math.sin(angle)) * timeFix
+        }
+    },
+    "iciclewarp": class Iciclewarp extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#93C1F5"
+            this.vel.x = 0
+            this.vel.y = Math.random() > 0.5 ? this.speed : -this.speed
+            this.retring = this.vel.y > 0 ? true : false
+        }
+
+        interractWall(zone) {
+            let { radius } = this
+            let x1 = this.pos.x
+            let y1 = this.pos.y
+            if (zone.checkOverlap(this.radius, this.pos.x, this.pos.y, zone.x, zone.y, zone.w, zone.h)) {
+                if (
+                    zone.lineal(
+                        { x: zone.x, y: zone.y },
+                        { x: zone.x + zone.w, y: zone.y + zone.h },
+                        { x: x1, y: y1 }
+                    )
+                ) {
+                    if (
+                        zone.lineal(
+                            { x: zone.x + zone.w, y: zone.y },
+                            { x: zone.x, y: zone.y + zone.h },
+                            { x: x1, y: y1 }
+                        )
+                    ) {
+                        this.pos.x = zone.x + zone.w + radius + 1
+                        this.vel.x = Math.abs(this.vel.x)
+                        this.pos.x = boundary.x - this.radius * 2
+                        // consolthis.log('right')
+                    } else {
+                        this.pos.y = zone.y - radius - 1
+                        this.vel.y = -Math.abs(this.vel.y)
+                        this.pos.y = boundary.y + boundary.h - this.radius
+                        // consolthis.log('top')
+                    }
+                } else {
+                    if (
+                        zone.lineal(
+                            { x: zone.x + zone.w, y: zone.y },
+                            { x: zone.x, y: zone.y + zone.h },
+                            { x: x1, y: y1 }
+                        )
+                    ) {
+                        this.pos.y = zone.y + zone.h + radius + 1
+                        this.vel.y = Math.abs(this.vel.y)
+                        this.pos.y = boundary.y - this.radius
+                    } else {
+                        this.pos.x = zone.x - radius - 1
+                        this.vel.x = -Math.abs(this.vel.x)
+                        this.pos.x = boundary.x + boundary.w - this.radius
+                    }
+                }
+            }
+        }
+
+        colide(boundary) {
+            if (this.pos.x <= boundary.x - this.radius) {
+                this.pos.x = boundary.x + boundary.w - this.radius
+            }
+            if (this.pos.x - this.radius >= boundary.x + boundary.w) {
+                this.pos.x = boundary.x - this.radius * 2
+            }
+            if (this.pos.y <= boundary.y - this.radius && !this.retring) {
+                this.pos.y = boundary.y + boundary.h - this.radius
+            }
+            if (this.pos.y - this.radius >= boundary.y + boundary.h && this.retring) {
+                this.pos.y = boundary.y - this.radius
+            }
+        }
+    },
+    "sizer": class Sizer extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#F27743"
+            this.growing = true
+
+            this.maxRadius = this.radius * 2.5
+            this.minRadius = this.radius / 2.5
+        }
+
+        behavior(timeFix, delta) {
+            if (this.growing) {
+                this.radius += (timeFix * 0.08) * this.minRadius
+                this.baseRadius = this.radius
+                if (this.radius > this.maxRadius) {
+                    this.growing = false
+                }
+            } else {
+                this.radius -= ((delta / 30) * 0.08) * this.minRadius
+                this.baseRadius = this.radius
+                if (this.radius < this.minRadius) {
+                    this.growing = true
+                }
+            }
+        }
+    },
+    "mine": class Mine extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#b4b83f"
+
+            this.speedMultiplier = 0
+        }
+        update(...props) {
+            super.update(...props)
+            this.speedMultiplier = 0
+        }
+
+        interact(player) {
+            super.interact(player)
+
+            if (this.d(player.pos.x, player.pos.y, this.pos.x, this.pos.y) <= (5.25 * 32) + player.radius && !player.died && !player.god && !player.onSafe) {
+                this.speedMultiplier = 1
+            }
+        }
+    },
+    "sniper": class Sniper extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#A05353"
+            this.delay = 3000
+            this.timer = Math.random() * this.delay
+
+            this.bulletsize = data.bulletsize || this.radius / 2
+        }
+
+        behavior(timeFix, delta) {
+            this.timer += delta
+        }
+
+        interact(player) {
+            super.interact(player)
+            if (this.timer > this.delay && !player.onSafe) {
+                let target
+                if (this.d(player.pos.x, player.pos.y, this.pos.x, this.pos.y) <= 20 * 32) {
+                    target = player
+                }
+
+                if (target) {
+                    let angl = Math.atan2(target.pos.y - this.pos.y, target.pos.x - this.pos.x)
+
+                    let bullet = new Bullet({
+                        cx: this.pos.x,
+                        cy: this.pos.y,
+                        radius: this.bulletsize,
+                        speed: 10,
+                        spawner: this.spawner
+                    })
+                    bullet.vel.x = Math.cos(angl) * bullet.speed
+                    bullet.vel.y = Math.sin(angl) * bullet.speed
+
+                    this.nestedEntities.push(bullet)
+                    this.timer = 0
+                }
+            }
+        }
+    },
+    "octosniper": class Octosniper extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#D3134F"
+            this.delay = 4000
+            this.timer = Math.random() * this.delay
+
+            this.bulletsize = data.bulletsize || 8
+        }
+
+        behavior(timeFix, delta) {
+            this.timer += delta
+            if (this.timer > this.delay) {
+                for (let i = 0; i < 9; i++) {
+                    let bullet = new Bullet({
+                        cx: this.pos.x,
+                        cy: this.pos.y,
+                        radius: this.bulletsize,
+                        speed: 8,
+                        spawner: this.spawner
+                    })
+                    bullet.color = "#D3134F"
+                    bullet.vel.x = Math.cos(i * Math.PI / 4) * bullet.speed
+                    bullet.vel.y = Math.sin(i * Math.PI / 4) * bullet.speed
+
+                    this.nestedEntities.push(bullet)
+                }
+                this.timer = 0
+            }
+        }
+    },
+    "growing": class Growing extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#70E099"
+            this.isEnemy = true
+
+            this.fixedRadius = data.radius
+
+            this.sizeChange = 0
+            this.maxRadius = data.maxRadius || this.radius * 3
+            this.radiusSpeed = data.radiusSpeed / 10 || 0.3
+
+            this.ispl = false
+        }
+
+        behavior(timeFix, delta) {
+            if (!this.ispl) {
+                if (this.radius > this.fixedRadius) {
+                    this.sizeChange = -this.radiusSpeed
+                } else {
+                    this.sizeChange = 0
+                    this.radius = this.fixedRadius
+                }
+            } else {
+                if (this.radius < this.maxRadius) {
+                    this.sizeChange = this.radiusSpeed
+                } else {
+                    this.sizeChange = 0
+                    this.radius = this.maxRadius
+                }
+            }
+
+            this.radius += this.sizeChange * delta / 10
+            this.baseRadius = this.radius
+        }
+
+        interact(player) {
+            super.interact(player)
+            let radiusG = 7 + (this.radius / 30)
+            let ispl = false
+
+            if (this.d(player.pos.x, player.pos.y, this.pos.x, this.pos.y) <= radiusG * 32 && !player.died && !player.onSafe && !player.god) {
+                ispl = true
+            }
+
+            this.ispl = ispl
+        }
+    },
+    "changer": class Changer extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#565656"
+
+            this.timer = 0
+            this.disable = false
+
+            if (data.num >= data.amount / 2) {
+                this.disable = true
+            }
+        }
+
+        behavior(timerFix, delta) {
+            this.timer += delta
+
+            if (this.timer > 5000) {
+                this.disable = !this.disable
+            }
+
+            this.harmless = this.disable
+
+
+            this.timer = this.timer % 5000
+        }
+    },
+    "wine": class Wine extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#1E5945"
+
+            this.detected = false
+        }
+
+        interact(player) {
+            super.interact(player)
+            if (this.d(player.pos.x, player.pos.y, this.pos.x, this.pos.y) <= (5.25 * 32) + player.radius && !player.died && !player.god && !player.onSafe) {
+                this.speedMultiplier = 0.25
+            }
+        }
+    },
+    "warpe": class Warpe extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#4E1609"
+
+        }
+
+        colide(boundary) {
+            if (this.pos.x - this.radius < boundary.x) {
+                this.pos.x = boundary.x + this.radius
+                this.vel.x = Math.abs(this.vel.x)
+            }
+            if (this.pos.x + this.radius > boundary.x + boundary.w) {
+                this.pos.x = boundary.x + boundary.w - this.radius
+                this.vel.x = -Math.abs(this.vel.x)
+            }
+            if (this.pos.y <= boundary.y - this.radius) {
+                this.pos.y = boundary.y + boundary.h - this.radius
+            }
+            if (this.pos.y - this.radius >= boundary.y + boundary.h) {
+                this.pos.y = boundary.y - this.radius
+            }
+        }
+    },
+    "oscillating": class Oscillating extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#869E0F"
+
+            this.timer = 0
+        }
+
+        behavior(timeFix, delta) {
+            this.timer += delta
+            if (this.timer > 1000) {
+                this.vel.x = -this.vel.x
+                this.vel.y = -this.vel.y
+            }
+            this.timer = this.timer % 1000
+        }
+    },
+    "zoning": class Zoning extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#A03811"
+
+            this.switchInterval = 1000;
+            this.switchTime = Math.random() * this.switchInterval;
+            this.turnAngle = Math.PI / 2
+            this.turnAngle *= (Math.floor(Math.random() * 2) * 2) - 1
+        }
+
+        behavior(timeFix, delta) {
+            if (this.switchTime > 0) {
+                this.switchTime -= delta
+            } else {
+                this.switchTime = this.switchInterval
+                this.velToAngle();
+                this.angle += this.turnAngle
+                this.angleToVel();
+            }
+        }
+    },
+    "flame": class Flame extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#D53E07"
+            this.timer = 0
+
+            this.light = true
+
+            this.nestedEntities = []
+        }
+
+        behavior(timeFix, delta) {
+            this.timer += delta
+            if (this.timer >= 32.5 * ((this.radius * 2) / this.speed)) {
+                const trail = new Trail({
+                    cx: this.pos.x,
+                    cy: this.pos.y,
+                    radius: this.radius,
+                    speed: 0,
+                    spawner: this.spawner,
+                    ownerSpeed: this.speed
+                })
+                this.nestedEntities.push(trail)
+
+                this.timer = 0
+            }
+        }
+    },
+    "lava": class Lava extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#f78306"
+            this.auraAlpha = 0.5
+            this.auraColor = "rgb(247, 131, 6)"
+            this.aura = data.aura != undefined ? data.aura : 150
+        }
+    },
+    "corrosive": class Corrosive extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#00EB00"
+        }
+    },
+    "corrosivesniper": class Corrosivesniper extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#61FF61"
+
+            this.delay = 3000
+            this.timer = Math.random() * this.delay
+
+            this.bulletsize = data.bulletsize || this.radius / 2
+        }
+
+        behavior(timeFix, delta) {
+            this.timer += delta
+        }
+
+        interact(player) {
+            super.interact(player)
+            if (this.timer > this.delay && !player.onSafe) {
+                let target
+                if (this.d(player.pos.x, player.pos.y, this.pos.x, this.pos.y) <= 20 * 32) {
+                    target = player
+                }
+
+                if (target) {
+                    let angl = Math.atan2(target.pos.y - this.pos.y, target.pos.x - this.pos.x)
+
+                    let bullet = new Bullet({
+                        cx: this.pos.x,
+                        cy: this.pos.y,
+                        radius: this.bulletsize,
+                        speed: 10,
+                        spawner: this.spawner
+                    })
+                    bullet.color = "#61FF61"
+                    bullet.vel.x = Math.cos(angl) * bullet.speed
+                    bullet.vel.y = Math.sin(angl) * bullet.speed
+
+                    this.nestedEntities.push(bullet)
+                    this.timer = 0
+                }
+            }
+        }
+    },
+    "rapiditysniper": class Rapiditysniper extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#8C01B7"
+
+            this.delay = 3000
+            this.timer = Math.random() * this.delay
+
+            this.bulletsize = data.bulletsize || this.radius / 2
+        }
+
+        behavior(timeFix, delta) {
+            this.timer += delta
+        }
+
+        interact(player) {
+            super.interact(player)
+            if (this.timer > this.delay && !player.onSafe) {
+                let target
+                if (this.d(player.pos.x, player.pos.y, this.pos.x, this.pos.y) <= 20 * 32) {
+                    target = player
+                }
+
+                if (target) {
+                    let angl = Math.atan2(target.pos.y - this.pos.y, target.pos.x - this.pos.x)
+
+                    let bullet = new Bullet({
+                        cx: this.pos.x,
+                        cy: this.pos.y,
+                        radius: this.bulletsize,
+                        speed: 10,
+                        spawner: this.spawner
+                    })
+                    bullet.color = "#8C01B7"
+                    bullet.vel.x = Math.cos(angl) * bullet.speed
+                    bullet.vel.y = Math.sin(angl) * bullet.speed
+
+                    this.nestedEntities.push(bullet)
+                    this.timer = 0
+                }
+            }
+        }
+    },
+    "shield": class Shield extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#29ffc6"
+            this.auraAlpha = 0.3
+            this.auraColor = "rgb(41, 255, 198)"
+        }
+    },
+    "tree": class Tree extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#4e2700"
+
+            this.staticSpeed = data.speed + 0
+            this.releaseTime = 4000
+            this.timer = Math.random() * 3500
+            this.timer2 = Math.random() * 500
+            this.timer3 = 0
+            this.waiting = true
+            this.shake = false
+            this.currentVel = { x: this.vel.x + 0, y: this.vel.y + 0 }
+            this.beforeShakeVel = { x: this.vel.x + 0, y: this.vel.y + 0 }
+        }
+
+        behavior(timeFix, delta) {
+            this.timer += delta
+            this.timer2 += delta
+            this.timer3 += delta
+            if (this.timer > this.releaseTime) {
+                let count = Math.floor(Math.random() * 6) + 2
+                for (let i = 0; i < count; i++) {
+                    let bullet = new Leafbullet({
+                        cx: this.pos.x,
+                        cy: this.pos.y,
+                        radius: 12,
+                        speed: 6,
+                        spawner: this.spawner
+                    })
+                    bullet.vel.x = Math.cos(i * Math.PI / (count / 2)) * bullet.speed
+                    bullet.vel.y = Math.sin(i * Math.PI / (count / 2)) * bullet.speed
+
+                    this.nestedEntities.push(bullet)
+                }
+                this.timer = 0
+                this.vel.x = this.beforeShakeVel.x
+                this.vel.y = this.beforeShakeVel.y
+                this.shake = false
+            }
+            if (this.vel.x !== 0 && this.vel.y != 0) {
+                this.currentVel.x = this.vel.x
+                this.currentVel.y = this.vel.y
+            }
+            if (this.timer2 > 500) {
+                this.waiting = !this.waiting
+                this.timer2 = 0
+            }
+            if (this.timer > 3500) {
+                if (!this.shake) {
+                    this.beforeShakeVel.x = this.currentVel.x
+                    this.beforeShakeVel.y = this.currentVel.y
+                }
+                this.shake = true
+                if (this.timer3 > 50) {
+                    this.vel.x = -this.currentVel.x
+                    this.vel.y = -this.currentVel.y
+                    this.timer3 = 0
+                }
+            } else if (this.waiting) {
+                this.vel.x = 0
+                this.vel.y = 0
+            } else {
+                this.vel.x = this.currentVel.x
+                this.vel.y = this.currentVel.y
+                let deg = (this.timer2 / 5 + 90) * Math.PI / 180
+                this.speedMultiplier = Math.abs(Math.sin(deg))
+                if (this.speedMultiplier > 1.5) this.speedMultiplier = 1.5
+            }
+            if (this.waiting) {
+                this.speedMultiplier *= 1
+            }
+        }
+    },
+    "pull": class Pull extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#78148C"
+        }
+    },
+    "push": class Push extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#7B9DB2"
+        }
+    },
+    "slippery": class Slippery extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#1AACBF"
+            this.auraAlpha = 0.5
+        }
+    },
+    "enlarging": class Enlarging extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#4d0163"
+            this.auraAlpha = 0.5
+        }
+    },
+    "zigzag": class Zigzag extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#B371F2"
+
+            this.switchInterval = 500;
+            this.switchTime = 500;
+            this.switchAdd = false;
+            this.turnAngle = Math.PI / 2
+        }
+
+        behavior(timeFix, delta) {
+            if (this.switchTime > 0) {
+                this.switchTime -= delta
+            } else {
+                this.switchTime = this.switchInterval
+                if (!this.switchAdd) {
+                    this.velToAngle();
+                    this.angle -= this.turnAngle
+                    this.angleToVel();
+                    this.switchAdd = true;
+                } else {
+                    this.velToAngle();
+                    this.angle += this.turnAngle
+                    this.angleToVel();
+                    this.switchAdd = false;
+                }
+            }
+        }
+    },
+    "toxic": class Toxic extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#00C700"
+            this.auraAlpha = 0.2
+        }
+    },
+    "speedsniper": class Speedsniper extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#FF9000"
+            this.delay = 3000
+            this.timer = Math.random() * this.delay
+
+            this.bulletsize = data.bulletsize || this.radius / 2
+        }
+
+        behavior(timeFix, delta) {
+            this.timer += delta
+        }
+
+        interact(player) {
+            super.interact(player)
+            if (this.timer > this.delay && !player.onSafe) {
+                let target
+                if (this.d(player.pos.x, player.pos.y, this.pos.x, this.pos.y) <= 20 * 32) {
+                    target = player
+                }
+
+                if (target) {
+                    let angl = Math.atan2(target.pos.y - this.pos.y, target.pos.x - this.pos.x)
+
+                    let bullet = new Bullet({
+                        cx: this.pos.x,
+                        cy: this.pos.y,
+                        radius: this.bulletsize,
+                        speed: 10,
+                        spawner: this.spawner
+                    })
+                    bullet.color = "#FF9000"
+                    bullet.vel.x = Math.cos(angl) * bullet.speed
+                    bullet.vel.y = Math.sin(angl) * bullet.speed
+
+                    this.nestedEntities.push(bullet)
+                    this.timer = 0
+                }
+            }
+        }
+    },
+    "regensniper": class Regensniper extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#00CC8E"
+            this.delay = 3000
+            this.timer = Math.random() * this.delay
+
+            this.bulletsize = data.bulletsize || this.radius / 2
+        }
+
+        behavior(timeFix, delta) {
+            this.timer += delta
+        }
+
+        interact(player) {
+            super.interact(player)
+            if (this.timer > this.delay && !player.onSafe) {
+                let target
+                if (this.d(player.pos.x, player.pos.y, this.pos.x, this.pos.y) <= 20 * 32) {
+                    target = player
+                }
+
+                if (target) {
+                    let angl = Math.atan2(target.pos.y - this.pos.y, target.pos.x - this.pos.x)
+
+                    let bullet = new Bullet({
+                        cx: this.pos.x,
+                        cy: this.pos.y,
+                        radius: this.bulletsize,
+                        speed: 10,
+                        spawner: this.spawner
+                    })
+                    bullet.color = "#00CC8E"
+                    bullet.vel.x = Math.cos(angl) * bullet.speed
+                    bullet.vel.y = Math.sin(angl) * bullet.speed
+
+                    this.nestedEntities.push(bullet)
+                    this.timer = 0
+                }
+            }
+        }
+    },
+    "turning": class Turning extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#29521A"
+
+            this.dir = this.speed / 150
+        }
+
+        behavior(timeFix, delta) {
+            this.velToAngle()
+            this.angle += this.dir * (delta / 30)
+            this.angleToVel()
+        }
+
+        interractWall(zone) {
+            let { radius } = this
+            let x1 = this.pos.x
+            let y1 = this.pos.y
+            if (zone.checkOverlap(this.radius, this.pos.x, this.pos.y, zone.x, zone.y, zone.w, zone.h)) {
+                if (
+                    zone.lineal(
+                        { x: zone.x, y: zone.y },
+                        { x: zone.x + zone.w, y: zone.y + zone.h },
+                        { x: x1, y: y1 }
+                    )
+                ) {
+                    if (
+                        zone.lineal(
+                            { x: zone.x + zone.w, y: zone.y },
+                            { x: zone.x, y: zone.y + zone.h },
+                            { x: x1, y: y1 }
+                        )
+                    ) {
+                        this.pos.x = zone.x + zone.w + radius + 1
+                        this.vel.x = Math.abs(this.vel.x)
+                        this.dir = -this.dir
+                        // consolthis.log('right')
+                    } else {
+                        this.pos.y = zone.y - radius - 1
+                        this.vel.y = -Math.abs(this.vel.y)
+                        this.dir = -this.dir
+                        // consolthis.log('top')
+                    }
+                } else {
+                    if (
+                        zone.lineal(
+                            { x: zone.x + zone.w, y: zone.y },
+                            { x: zone.x, y: zone.y + zone.h },
+                            { x: x1, y: y1 }
+                        )
+                    ) {
+                        this.pos.y = zone.y + zone.h + radius + 1
+                        this.vel.y = Math.abs(this.vel.y)
+                        this.dir = -this.dir
+                    } else {
+                        this.pos.x = zone.x - radius - 1
+                        this.vel.x = -Math.abs(this.vel.x)
+                        this.dir = -this.dir
+                    }
+                }
+            }
+        }
+
+        colide(boundary) {
+            if (this.pos.x - this.radius < boundary.x) {
+                this.pos.x = boundary.x + this.radius
+                this.vel.x = Math.abs(this.vel.x)
+                this.dir = -this.dir
+            }
+            if (this.pos.x + this.radius > boundary.x + boundary.w) {
+                this.pos.x = boundary.x + boundary.w - this.radius
+                this.vel.x = -Math.abs(this.vel.x)
+                this.dir = -this.dir
+            }
+            if (this.pos.y - this.radius < boundary.y) {
+                this.pos.y = boundary.y + this.radius
+                this.vel.y = Math.abs(this.vel.y)
+                this.dir = -this.dir
+            }
+            if (this.pos.y + this.radius > boundary.y + boundary.h) {
+                this.pos.y = boundary.y + boundary.h - this.radius
+                this.vel.y = -Math.abs(this.vel.y)
+                this.dir = -this.dir
+            }
+        }
+    },
+    "wavy": class Wavy extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#B11E1F"
+            this.velToAngle();
+            this.angle = Math.PI / 2;
+            this.angleToVel();
+            this.circleSize = 100;
+            this.dir = 1;
+            this.switchInterval = 800;
+            this.switchTime = 400;
+            this.angleIncrement = (this.speed + 6) / this.circleSize
+        }
+
+        behavior(timeFix, delta) {
+            if (this.switchTime > 0) {
+                this.switchTime -= delta
+            } else {
+                this.switchTime = this.switchInterval
+                this.dir *= -1;
+            }
+            this.velToAngle();
+            this.angle += this.angleIncrement * this.dir * timeFix;
+            this.angleToVel();
+        }
+
+        colide(boundary) {
+            if (this.pos.x - this.radius < boundary.x) {
+                this.pos.x = boundary.x + this.radius
+                this.vel.x = Math.abs(this.vel.x)
+                this.dir = - this.dir
+            }
+            if (this.pos.x + this.radius > boundary.x + boundary.w) {
+                this.pos.x = boundary.x + boundary.w - this.radius
+                this.vel.x = -Math.abs(this.vel.x)
+                this.dir = - this.dir
+            }
+            if (this.pos.y - this.radius < boundary.y) {
+                this.pos.y = boundary.y + this.radius
+                this.vel.y = Math.abs(this.vel.y)
+                this.dir = - this.dir
+            }
+            if (this.pos.y + this.radius > boundary.y + boundary.h) {
+                this.pos.y = boundary.y + boundary.h - this.radius
+                this.vel.y = -Math.abs(this.vel.y)
+                this.dir = - this.dir
+            }
+        }
+    },
+    "wind": class Wind extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#82c2a5"
+            this.gravity = 16 / 32
+            this.harmless = true
+            this.imune = true
+            this.alpha = 0.4
+        }
+
+        interact(player, data) {
+            while (this.d(player.pos.x, player.pos.y, this.pos.x, this.pos.y) < player.radius + this.radius) {
+                let dx = player.pos.x - this.pos.x
+                let dy = player.pos.y - this.pos.y
+                let dist = this.d(player.pos.x, player.pos.y, this.pos.x, this.pos.y)
+                let attractAmplitude = Math.pow(2, -(dist / (this.radius / 2)))
+                let moveDist = this.gravity * attractAmplitude
+                let angle = Math.atan2(dy, dx)
+                let timeFix = data.timeFix
+                player.pos.x += (moveDist * Math.cos(angle)) * timeFix
+                player.pos.y += (moveDist * Math.sin(angle)) * timeFix
+                player.posToGlobal()
+            }
+        }
+    },
+    "windsniper": class Windsniper extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#9de3c6"
+            this.delay = 3000
+            this.timer = Math.random() * this.delay
+
+            this.bulletsize = data.bulletsize || this.radius / 2
+        }
+
+        behavior(timeFix, delta) {
+            this.timer += delta
+        }
+
+        interact(player) {
+            super.interact(player)
+            if (this.timer > this.delay && !player.onSafe) {
+                let target
+                if (this.d(player.pos.x, player.pos.y, this.pos.x, this.pos.y) <= 20 * 32) {
+                    target = player
+                }
+
+                if (target) {
+                    let angl = Math.atan2(target.pos.y - this.pos.y, target.pos.x - this.pos.x)
+
+                    let bullet = new Bullet({
+                        cx: this.pos.x,
+                        cy: this.pos.y,
+                        radius: this.bulletsize,
+                        speed: 10,
+                        spawner: this.spawner
+                    })
+                    bullet.color = "#9de3c6"
+                    bullet.vel.x = Math.cos(angl) * bullet.speed
+                    bullet.vel.y = Math.sin(angl) * bullet.speed
+
+                    this.nestedEntities.push(bullet)
+                    this.timer = 0
+                }
+            }
+        }
+    },
+    "snowman": class Snowman extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#fff"
+
+            this.wallHit = false
+            this.snowmanRadiusMultipler = 1
+            this.growthRate = 0.05 / 2
+            this.maxRadiusMultipler = 3
+            this.wallTime = 1500
+            this.wallDuration = this.wallTime
+            this.wallDuration2 = this.wallTime
+            this.fixatedShink = false
+            this.shrinkingRemaining = 1
+        }
+
+        colide(boundary) {
+            if (this.pos.x - this.radius < boundary.x) {
+                this.pos.x = boundary.x + this.radius
+                this.vel.x = Math.abs(this.vel.x)
+                this.wallHit = true
+            }
+            if (this.pos.x + this.radius > boundary.x + boundary.w) {
+                this.pos.x = boundary.x + boundary.w - this.radius
+                this.vel.x = -Math.abs(this.vel.x)
+                this.wallHit = true
+            }
+            if (this.pos.y - this.radius < boundary.y) {
+                this.pos.y = boundary.y + this.radius
+                this.vel.y = Math.abs(this.vel.y)
+                this.wallHit = true
+            }
+            if (this.pos.y + this.radius > boundary.y + boundary.h) {
+                this.pos.y = boundary.y + boundary.h - this.radius
+                this.vel.y = -Math.abs(this.vel.y)
+                this.wallHit = true
+            }
+        }
+
+        interractWall(zone) {
+            let { radius } = this
+            let x1 = this.pos.x
+            let y1 = this.pos.y
+            if (zone.checkOverlap(this.radius, this.pos.x, this.pos.y, zone.x, zone.y, zone.w, zone.h)) {
+                if (
+                    zone.lineal(
+                        { x: zone.x, y: zone.y },
+                        { x: zone.x + zone.w, y: zone.y + zone.h },
+                        { x: x1, y: y1 }
+                    )
+                ) {
+                    if (
+                        zone.lineal(
+                            { x: zone.x + zone.w, y: zone.y },
+                            { x: zone.x, y: zone.y + zone.h },
+                            { x: x1, y: y1 }
+                        )
+                    ) {
+                        this.pos.x = zone.x + zone.w + radius + 1
+                        this.vel.x = Math.abs(this.vel.x)
+                        this.wallHit = true
+                        // consolthis.log('right')
+                    } else {
+                        this.pos.y = zone.y - radius - 1
+                        this.vel.y = -Math.abs(this.vel.y)
+                        this.wallHit = true
+                        // consolthis.log('top')
+                    }
+                } else {
+                    if (
+                        zone.lineal(
+                            { x: zone.x + zone.w, y: zone.y },
+                            { x: zone.x, y: zone.y + zone.h },
+                            { x: x1, y: y1 }
+                        )
+                    ) {
+                        this.pos.y = zone.y + zone.h + radius + 1
+                        this.vel.y = Math.abs(this.vel.y)
+                        this.wallHit = true
+                    } else {
+                        this.pos.x = zone.x - radius - 1
+                        this.vel.x = -Math.abs(this.vel.x)
+                        this.wallHit = true
+                    }
+                }
+            }
+        }
+
+        behavior(timeFix, delta) {
+            if (this.wallHit) {
+                if (!this.fixatedShink) this.shrinkingRemaining = this.snowmanRadiusMultipler
+                this.fixatedShink = true
+                let radiusDifference = this.shrinkingRemaining * (Math.ceil(this.wallDuration2) / this.wallTime)
+                this.snowmanRadiusMultipler = radiusDifference
+                this.snowmanRadiusMultipler = Math.max(this.snowmanRadiusMultipler, 1)
+                this.radiusMultiplier *= this.snowmanRadiusMultipler
+                this.wallDuration -= delta
+                this.wallDuration2 -= delta * 2
+                this.speedMultiplier = 0
+                if (this.wallDuration < 0) {
+                    this.wallDuration = this.wallTime
+                    this.wallDuration2 = this.wallTime
+                    this.wallHit = false
+                    this.fixatedShink = false
+                }
+            } else {
+                this.snowmanRadiusMultipler = Math.min(this.snowmanRadiusMultipler + this.growthRate, this.maxRadiusMultipler)
+                this.radiusMultiplier *= this.snowmanRadiusMultipler
+            }
+        }
+    },
+    "star": class Star extends Entity {
+        constructor(data) {
+            super(data)
+            this.color = "#faf46e"
+
+            this.timer = 0
+            this.starPos = true
+        }
+
+        move(timeFix, friction) {
+            let vel
+            if (this.starPos) {
+                vel = new Vector(Math.abs(this.vel.x) * this.speedMultiplier * 2, Math.abs(this.vel.y) * this.speedMultiplier * 2)
+            } else {
+                vel = new Vector((-Math.abs(this.vel.x)) * this.speedMultiplier * 2, (-Math.abs(this.vel.y)) * this.speedMultiplier * 2)
+            }
+
+            this.pos.x += vel.x
+            this.pos.y += vel.y
+
+            let dim = 1 - friction * timeFix;
+            this.vel.x *= dim;
+            this.vel.y *= dim;
+        }
+
+        colide(boundary) {
+            if (this.pos.x - this.radius < boundary.x) {
+                this.pos.x = boundary.x + this.radius
+                this.vel.x = Math.abs(this.vel.x)
+            }
+            if (this.pos.x + this.radius > boundary.x + boundary.w) {
+                this.pos.x = boundary.x + boundary.w - this.radius
+                this.vel.x = -Math.abs(this.vel.x)
+            }
+            if (this.pos.y - this.radius < boundary.y) {
+                this.pos.y = boundary.y + this.radius
+                this.vel.y = Math.abs(this.vel.y)
+            }
+            if (this.pos.y + this.radius > boundary.y + boundary.h) {
+                this.pos.y = boundary.y + boundary.h - this.radius
+                this.vel.y = -Math.abs(this.vel.y)
+            }
+        }
+
+
+        behavior(timeFix, delta) {
+            this.timer += delta
+            this.speedMultiplier = 0
+            if (this.timer > 500) {
+                this.speedMultiplier = 1
+                this.starPos = !this.starPos
+                this.timer = this.timer % 500
+            }
+        }
     }
 }
+
+function addEntity(name, entityClass) {
+    enemiescolors[name] = entityClass
+}
+
+function removeEntity(name) {
+    delete enemiescolors[name]
+}
+
+export { enemiescolors, addEntity, removeEntity, Entity } 

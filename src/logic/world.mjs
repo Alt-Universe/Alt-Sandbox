@@ -46,6 +46,7 @@ export default class {
     update(timeFix, delta, player) {
         let area = this.areas[player.area]
         let onTele = false
+        let onSafe = false
         for (let z in area.zones) {
             let zone = area.zones[z]
             if (zone != undefined) {
@@ -91,11 +92,32 @@ export default class {
                         zone.interractEnemie(area.entities[e])
                     }
                 }
+                if (zone.type == "safe") {
+                    if (
+                        player.pos.x - player.radius > zone.x &&
+                        player.pos.x + player.radius < zone.x + zone.w &&
+                        player.pos.y - player.radius > zone.y &&
+                        player.pos.y + player.radius < zone.y + zone.h
+                    ) {
+                        onSafe = true
+                    }
+                }
+                for (let e in area.entities) {
+                    area.entities[e].interact(player, { timeFix, delta })
+                }
             }
         }
         player.onTele = onTele
+        player.onSafe = onSafe
         for (let e in area.entities) {
+            let ent = area.entities[e]
             area.entities[e].update(timeFix, delta, player)
+            for (let eE in ent.nestedEntities) {
+                this.areas[player.area].entities[area.entId] = ent.nestedEntities[eE]
+                area.entId++
+                delete this.areas[player.area].entities[e].nestedEntities[eE]
+            }
+            if (ent.toRemove) delete this.areas[player.area].entities[e]
         }
     }
 

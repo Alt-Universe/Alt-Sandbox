@@ -1,6 +1,6 @@
 import Zone from "./zone.mjs"
 import Vector from "./vector.mjs"
-import enemiesTypes from "./entity.mjs"
+import { enemiesTypes } from "./entity.mjs"
 
 export default class {
     constructor(data, mdata, vec, id, areas, areasSize) {

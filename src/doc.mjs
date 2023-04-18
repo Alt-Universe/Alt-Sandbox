@@ -1,3 +1,6 @@
+import { Entity, addEntity, removeEntity } from "./logic/entity.mjs"
+
+
 export default function (initFunction, animationFunction) {
 
     let world = {
@@ -33,7 +36,7 @@ export default function (initFunction, animationFunction) {
                     "enemies": [
                         {
                             "type": [
-                                "disabler"
+                                "sniper"
                             ],
                             "radius": 30,
                             "speed": 4,
@@ -82,6 +85,7 @@ export default function (initFunction, animationFunction) {
         "name": "Gooded Map",
         "datas": {
             "fillStyle": "#888",
+            "fillAlpha": 0.6,
             "title": {
                 "fillStyle": "#fff",
                 "strokeStyle": "#969275"
@@ -113,6 +117,22 @@ export default function (initFunction, animationFunction) {
 
     document.getElementById("map-file").addEventListener('change', e => {
         readFile(e.target.files[0])
+    })
+
+    document.getElementById("script-file").addEventListener('change', e => {
+        let file = e.target.files[0]
+        if (file == undefined) return
+
+        let fr = new FileReader()
+        fr.onload = (e) => {
+            let lines = e.target.result
+            let script
+            if (file.name.endsWith(".mjs")) {
+                script = eval(lines)
+            }
+            script()
+        }
+        fr.readAsText(file)
     })
 
     let canvas = document.getElementById("canvas")

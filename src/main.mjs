@@ -27,6 +27,7 @@ let textures = loadImg()
 console.log(textures)
 
 let play = false
+let isActive = true
 
 let lut = Date.now()
 addEventListeners(
@@ -42,8 +43,8 @@ addEventListeners(
                 if (e.keyCode == 65 || e.keyCode == 37) movement.l = true
                 if (e.keyCode == 68 || e.keyCode == 39) movement.r = true
                 if (e.keyCode == 81) {
-                    if (!world.areasList.includes(player.area-1)) return
-                    world.teleport(player, { area: player.area-1 })
+                    if (!world.areasList.includes(player.area - 1)) return
+                    world.teleport(player, { area: player.area - 1 })
                     let tX = 0, tY = 0
 
                     let size = world.areas[player.area].size
@@ -61,8 +62,8 @@ addEventListeners(
                     player.gPos.y = tY
                 }
                 if (e.keyCode == 69) {
-                    if (!world.areasList.includes(player.area+1)) return
-                    world.teleport(player, { area: player.area+1 })
+                    if (!world.areasList.includes(player.area + 1)) return
+                    world.teleport(player, { area: player.area + 1 })
                     let tX = 0, tY = 0
 
                     let size = world.areas[player.area].size
@@ -81,7 +82,7 @@ addEventListeners(
                 }
                 if (e.keyCode == 67) {
                     player.noColide = !player.noColide
-                    if (player.noColide) player.color="purple"
+                    if (player.noColide) player.color = "purple"
                     else player.color = "red"
                 }
                 if (e.shiftKey) movement.s = true
@@ -112,6 +113,13 @@ addEventListeners(
             if (play)
                 movement.mouse = !movement.mouse
         })
+        window.onblur = function () {
+            isActive = false
+        }
+        window.onfocus = function () {
+            isActive = true
+            lut = Date.now()
+        }
         /*canvas.addEventListener("wheel", e => {
             if (play) {
                 if (e.ctrlKey) return
@@ -122,47 +130,49 @@ addEventListeners(
     },
     function req() {
         requestAnimationFrame(req)
-        let ct = Date.now()
-        let delta = ct - lut
-        let timeFix = delta / (1000 / 30)
-        lut = Date.now()
+        if (isActive) {
+            let ct = Date.now()
+            let delta = ct - lut
+            let timeFix = delta / (1000 / 30)
+            lut = Date.now()
 
-        ctx.beginPath()
-        ctx.clearRect(0, 0, 1280, 720)
-        ctx.globalAlpha = 1
-        ctx.fillStyle = "#333"
-        ctx.fillRect(0, 0, 1280, 720)
-        ctx.closePath()
+            ctx.beginPath()
+            ctx.clearRect(0, 0, 1280, 720)
+            ctx.globalAlpha = 1
+            ctx.fillStyle = "#333"
+            ctx.fillRect(0, 0, 1280, 720)
+            ctx.closePath()
 
-        for (let key in textures) {
-            let yoff = -24
-            let invFov = -fov + 2
-            textures[key].type == 'pattern' &&
-                textures[key].img.setTransform({
-                    a: 1,
-                    d: 1,
-                    e: -off.x,
-                    f: -off.y,
-                })
-            if (textures[key].type == 'pack') {
-                for (let key2 in textures[key])
-                    textures[key][key2].type == 'pattern' &&
-                        textures[key][key2].img.setTransform({
-                            a: 1,
-                            d: 1,
-                            e: - off.x,
-                            f: - off.y,
-                        })
+            for (let key in textures) {
+                let yoff = -24
+                let invFov = -fov + 2
+                textures[key].type == 'pattern' &&
+                    textures[key].img.setTransform({
+                        a: 1,
+                        d: 1,
+                        e: -off.x,
+                        f: -off.y,
+                    })
+                if (textures[key].type == 'pack') {
+                    for (let key2 in textures[key])
+                        textures[key][key2].type == 'pattern' &&
+                            textures[key][key2].img.setTransform({
+                                a: 1,
+                                d: 1,
+                                e: - off.x,
+                                f: - off.y,
+                            })
+                }
             }
+
+            player.move(movement)
+            player.update(timeFix, delta)
+            world.draw(ctx, off, fov, player, textures)
+            world.update(timeFix, delta, player)
+
+            off.x = player.pos.x - (1280 / 2)
+            off.y = player.pos.y - (720 / 2)
+            player.draw(ctx, off, fov)
         }
-
-        player.move(movement)
-        player.update(timeFix, delta)
-        world.draw(ctx, off, fov, player, textures)
-        world.update(timeFix, delta, player)
-
-        off.x = player.pos.x - (1280 / 2)
-        off.y = player.pos.y - (720 / 2)
-        player.draw(ctx, off, fov)
     }
 )
