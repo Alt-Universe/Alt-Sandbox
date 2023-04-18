@@ -360,7 +360,7 @@ class Leafbullet extends Entity {
     }
 }
 
-let enemiescolors = {
+let enemiesTypes = {
     "normal": class Normal extends Entity {
         constructor(data) {
             super(data)
@@ -1926,11 +1926,11 @@ let enemiescolors = {
 }
 
 function addEntity(name, entityClass) {
-    enemiescolors[name] = entityClass
+    enemiesTypes[name] = entityClass
 }
 
 function removeEntity(name) {
-    delete enemiescolors[name]
+    delete enemiesTypes[name]
 }
 
-export { enemiescolors, addEntity, removeEntity, Entity } 
+export { enemiesTypes, addEntity, removeEntity, Entity } 
