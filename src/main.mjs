@@ -79,6 +79,11 @@ addEventListeners(
                     player.gPos.x = tX
                     player.gPos.y = tY
                 }
+                if (e.keyCode == 67) {
+                    player.noColide = !player.noColide
+                    if (player.noColide) player.color="purple"
+                    else player.color = "red"
+                }
                 if (e.shiftKey) movement.s = true
             }
         })

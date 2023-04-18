@@ -49,7 +49,7 @@ export default class {
         for (let z in area.zones) {
             let zone = area.zones[z]
             if (zone != undefined) {
-                if (zone.type == "teleport") {
+                if (zone.type == "teleport" && !player.noColide) {
                     let overlap = zone.distance(
                         player.gPos,
                         zone.transforme(
@@ -85,7 +85,7 @@ export default class {
                     }
                     if (overlap < player.radius) onTele = true
                 }
-                if (zone.type == "wall") {
+                if (zone.type == "wall" && !player.noColide) {
                     zone.interractPlayer(player)
                     for (let e in area.entities) {
                         zone.interractEnemie(area.entities[e])

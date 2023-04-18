@@ -133,7 +133,7 @@ export default function (initFunction, animationFunction) {
     document.getElementById("play").onclick = function () {
         document.getElementById("menu").classList.add("hidden")
         document.getElementById("game").classList.remove("hidden")
-        let randomNames = ["Alt", "Ctrl", "F4", "C", "V"]
+        let randomNames = ["Alt", "Ctrl", "F4", "C", "V", "WTF", "RAR"]
         const selectedFile = document.getElementById('map-file').files[0]
         if (selectedFile != undefined) {
             readFile(selectedFile)

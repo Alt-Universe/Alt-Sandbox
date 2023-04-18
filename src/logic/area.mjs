@@ -51,7 +51,7 @@ export default class {
                         let enemie = zone.enemies[e]
                         let etype = enemie.type || "normal"
 
-                        let rand = etype[0].toUpperCase() + etype.slice(1)
+                        let rand = etype[0].toLowerCase() + etype.slice(1)
                         if (typeof enemie.type == "object") {
                             let mirorRand = etype[Math.floor(Math.random() * enemie.type.length)]
                             rand = mirorRand[0].toLowerCase() + mirorRand.slice(1)

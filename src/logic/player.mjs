@@ -19,12 +19,13 @@ export default class {
         this.speed = 17
 
         this.dmp = new Vector(0, 0)
+        this.noColide = false
     }
 
     draw(ctx, off, fov) {
         ctx.beginPath()
         ctx.globalAlpha = 1
-        ctx.fillStyle = "red"
+        ctx.fillStyle = this.color
         ctx.lineWidth = 1
         ctx.arc((this.pos.x - off.x) / fov, (this.pos.y - off.y) / fov, (this.radius) / fov, 0, 3.145 * 2);
         ctx.fill()
