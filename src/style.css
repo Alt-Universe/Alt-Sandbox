@@ -1,0 +1,152 @@
+* {
+    padding: 0%;
+    margin: 0%
+}
+
+/* Lol this style from Alt-Evades (Mini) ;3*/
+
+body {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    background-color: #111;
+    color: #888;
+}
+
+canvas {
+    position: absolute;
+    transform: scale(1);
+}
+
+#centr {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%)
+}
+
+#centr h1 {
+    font-size: 6em;
+}
+
+#centr p {
+    text-align: center;
+    font-size: 1.5em;
+}
+
+#play {
+    background-color: #555;
+    border-radius: 10px;
+    margin-left: 40%;
+    border: none;
+    font-size: 1em;
+    width: 4vw;
+}
+
+#play:hover {
+    background-color: #777;
+}
+
+.hidden {
+    display: none;
+}
+
+#settings {
+    position: absolute;
+    top: 50%;
+    left: 25%;
+    margin-right: -50%;
+    transform: translate(-75%, -50%);
+}
+
+#settings>h1 {
+    text-align: center;
+}
+
+#settings>ul {
+    display: block;
+    list-style-type: none;
+    margin-left: 5%;
+}
+
+#settings>ul>li {
+    background-color: rgb(46, 46, 46);
+    width: 90%;
+    padding: 5px;
+    color: white;
+    text-align: left;
+    display: block;
+    border-left: #C4C4C4 5px solid;
+    border-top: #232323 2px solid;
+    height: 20px;
+    font-weight: 0;
+    transition: all 0.3s;
+}
+
+#settings>ul>li:hover {
+    border-left: #636363 5px solid;
+    background-color: #9E9E9E;
+}
+
+#settings>ul>li>input {
+    background-color: #414141;
+    float: right;
+    color: white;
+    text-indent: 5px;
+    border: none;
+    width: 60%;
+    height: 120%;
+    box-sizing: border-box;
+}
+
+#settings>ul>li>input:hover {
+    background-color: #333333;
+}
+
+#settings>ul>li>input, textarea {
+    outline: none;
+}
+
+#change-log {
+    position: absolute;
+    left: 85%;
+    top: 75%;
+    width: 23.5%;
+    height: 55%;
+    text-align: center;
+    overflow: scroll;
+    font-weight: 900;
+    font-size: 1.5em;
+    transform: translate(-75%, -85%)
+}
+
+#change-log #changes {
+    font-size: 2em;
+}
+
+#change-log #update {
+    margin-top: -7.5%;
+}
+
+#change-log hr {
+    height: 2%;
+    border: none;
+    background-color: #888;
+}
+
+#change-log li {
+    margin-left: 10%;
+    text-align: left;
+}
+
+#change-log #in {
+    color: #b19835
+}
+
+#author {
+    position: absolute;
+    top: 95%;
+    left: 54%;
+    font-size: 1.5em;
+    color: rgba(159, 159, 159, 0.4);
+    transform: translate(-95%, -54%)
+}

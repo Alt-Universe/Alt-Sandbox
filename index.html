@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alt-Sandbox</title>
+    <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+    <div id="menu">
+        <div id="centr">
+            <h1>Alt-Evades</h1>
+            <p>Sandbox</p>
+            <p>Version: 0.2.5</p>
+            <button id="play">Play</button>
+        </div>
+        <div id="settings">
+            <h1>Settings</h1>
+            <ul>
+                <li>File Map -> <input type="file" id="map-file" /></li>
+                <li>Game Name -> <input type="text" id="game-name" /></li>
+            </ul>
+        </div>
+        <div id="change-log">
+            <dt id="changes">Change log</dt>
+            <br>
+            <dt id="update">Начало пути (v0.2.5)</dt>
+            <hr>
+            <li>Начало пути ;3</li>
+            <li>ОЧЕЕНЬ доглво</li>
+            <hr>
+        </div>
+        <div id="author"><p>Created by EtherCD</p></div>
+    </div>
+    <div id="game" class="hidden">
+        <canvas id="canvas" width="1280" height="720"></canvas>
+    </div>
+    <script src="/src/main.mjs" type="module"></script>
+    <script src="/src/yaml.min.js"></script>
+    <script src="/src/jquery.js"></script>
+</body>
+</html>
