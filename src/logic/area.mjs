@@ -3,56 +3,32 @@ import Vector from "./vector.mjs"
 import { enemiesTypes } from "./entity.mjs"
 
 export default class {
-    constructor(data, mdata, vec, id, areas, areasSize, survmode) {
+    constructor(data, pos, areasList, { id, wId, worldsList, worldsSize }) {
         this.id = id
+        this.wId = wId
         this.ajson = data
-        this.mjson = mdata
-        this.pos = vec
-        this.areas = areas
-        this.areasSize = areasSize
+        this.pos = pos
+        this.areasList = areasList
+        this.worldsList = worldsList
+        this.worldsSize = worldsSize
         this.size = new Vector(this.ajson.properties.size.width * 32, this.ajson.properties.size.height * 32)
 
         this.entities = {}
         this.zones = {}
         this.entId = 0
-        this.survmode = survmode
+        this.survmode = true
     }
 
     unload() {
         this.entities = {}
         this.zones = {}
-    }
-
-    draw(ctx, off, fov, textures, player) {
-        let fillStyle = this.ajson.properties.fillStyle || this.mjson.datas.fillStyle
-        for (let z in this.zones) {
-            if (this.zones[z].type != "wall")
-                this.zones[z].draw(ctx, off, fov, textures)
-        }
-        ctx.beginPath()
-        ctx.globalAlpha = this.mjson.datas.fillAlpha || 0.19
-        ctx.fillStyle = fillStyle
-        ctx.fillRect((-off.x) / fov, (-off.y) / fov, (this.size.x) / fov, (this.size.y) / fov)
-        ctx.closePath()
-        for (let z in this.zones) {
-            if (this.zones[z].type == "wall")
-                this.zones[z].draw(ctx, off, fov, textures)
-        }
-        player.draw(ctx, off, fov)
-        for (let e in this.entities) {
-            if (this.entities[e].aura != 0) {
-                this.entities[e].drawAura(ctx, off, fov)
-            }
-        }
-        for (let e in this.entities) {
-            this.entities[e].draw(ctx, off, fov)
-        }
+        this.entId = 0
     }
 
     load() {
         for (let z in this.ajson.zones) {
             let zone = this.ajson.zones[z]
-            this.zones[z] = new Zone({ ...zone, aPos: this.pos }, this.size, this.areas, this.areasSize, this.id)
+            this.zones[z] = new Zone({ ...zone, aPos: this.pos }, this.size, this.worldsList, this.areasList, this.id, this.wId,this.worldsSize)
             if (zone.type == "active") {
                 for (let e in zone.enemies) {
                     let amount = zone.enemies[e].amount == undefined ? 1 : zone.enemies[e].amount
@@ -85,7 +61,7 @@ export default class {
                             amount: enemie.amount,
                             num: i,
                             dir: dir,
-                            survmode: this.survmode,
+                            survmode: true,
                             ...enemie
                         })
                         this.entId++

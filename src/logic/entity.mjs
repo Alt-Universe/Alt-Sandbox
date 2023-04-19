@@ -161,7 +161,7 @@ class Entity {
     }
 
     interact(player, data) {
-        if (!this.mirage && this.survmode) {
+        if (!this.mirage && !player.god) {
             if (this.d(player.pos.x, player.pos.y, this.pos.x, this.pos.y) <= this.radius + player.radius && !player.onSafe && !this.harmless) {
                 player.kill()
             }
@@ -756,6 +756,7 @@ let enemiesTypes = {
             this.color = "#6789EF"
         }
         interact(player, data) {
+            super.interact(player, data)
             if (this.d(player.pos.x, player.pos.y, this.pos.x, this.pos.y) <= 32 * 5 + player.radius && !player.onSafe) {
                 this.speedMultiplier = 5
             }
@@ -1450,7 +1451,7 @@ let enemiesTypes = {
             this.color = "#78148C"
             this.auraColor = this.color
             this.aura = data.aura != undefined ? data.aura : 150
-            this.gravity = data.power || 2.5
+            this.gravity = data.power || 6 / 8
         }
 
         auraEffect(player, data) {
@@ -1471,7 +1472,7 @@ let enemiesTypes = {
             this.color = "#7B9DB2"
             this.auraColor = this.color
             this.aura = data.aura != undefined ? data.aura : 150
-            this.gravity = data.power || 2.5
+            this.gravity = data.power || 6 / 8
         }
 
         auraEffect(player, data) {
@@ -2007,6 +2008,20 @@ let enemiesTypes = {
             super(data)
             this.color = "#78148C"
             this.harmless = true
+            this.gravity = 6/8
+        }
+        interact(player, data) {
+            if (this.d(player.pos.x, player.pos.y, this.pos.x, this.pos.y) <= this.radius + player.radius && !player.god) {
+                let dx = player.pos.x - this.pos.x
+                let dy = player.pos.y - this.pos.y
+                let dist = this.d(player.pos.x, player.pos.y, this.pos.x, this.pos.y)
+                let attractAmplitude = Math.pow(2, -(dist / 120))
+                let moveDist = this.gravity * attractAmplitude
+                let angle = Math.atan2(dy, dx)
+                let timeFix = data.timeFix
+                player.gPos.x -= (moveDist * Math.cos(angle)) * timeFix
+                player.gPos.y -= (moveDist * Math.sin(angle)) * timeFix
+            }
         }
     },
     "pushghost": class Pushghost extends Entity {
@@ -2014,6 +2029,21 @@ let enemiesTypes = {
             super(data)
             this.color = "#7B9DB2"
             this.harmless = true
+            this.gravity = 6/8
+        }
+
+        interact(player, data) {
+            if (this.d(player.pos.x, player.pos.y, this.pos.x, this.pos.y) <= this.radius + player.radius && !player.god) {
+                let dx = player.pos.x - this.pos.x
+                let dy = player.pos.y - this.pos.y
+                let dist = this.d(player.pos.x, player.pos.y, this.pos.x, this.pos.y)
+                let attractAmplitude = Math.pow(2, -(dist / 120))
+                let moveDist = this.gravity * attractAmplitude
+                let angle = Math.atan2(dy, dx)
+                let timeFix = data.timeFix
+                player.gPos.x += (moveDist * Math.cos(angle)) * timeFix
+                player.gPos.y += (moveDist * Math.sin(angle)) * timeFix
+            }
         }
     }
 }

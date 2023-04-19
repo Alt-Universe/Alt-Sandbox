@@ -4,7 +4,7 @@ export default class {
     constructor(world, name, aSize) {
         this.world = world
         this.area = 1
-        this.gPos = new Vector((Math.random() * 10*32) + 2*32, (Math.random() * 10*32) + 2*32)
+        this.gPos = new Vector((Math.random() * 10*32), (Math.random() * 10*32) + 2*32)
         this.aPos = new Vector(0, 0)
         this.aSize = aSize
         this.pos = new Vector(this.gPos.x-this.aPos.x, this.gPos.y-this.aPos.y)

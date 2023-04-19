@@ -1,10 +1,11 @@
 import Vector from "./vector.mjs"
 
 export default class {
-    constructor(data, areaSize, areas, areasSize, area) {
-        let w = areaSize.x
-        let h = areaSize.y
-        this.area = Number(area)
+    constructor(data, areaSizeS, worlds, areas, id, wId, worldsSize) {
+        let w = areaSizeS.x
+        let h = areaSizeS.y
+        this.area = Number(id)
+        this.world = wId
         this.aPos = data.aPos
 
         this.w = this.tileString(data.w, w)
@@ -12,6 +13,7 @@ export default class {
         this.x = this.tileString(data.x, w)
         this.y = this.tileString(data.y, h)
 
+        this.worlds = worlds
         this.areas = areas
 
         this.enemies = data.enemies
@@ -32,10 +34,12 @@ export default class {
         if (this.type == "teleport") {
             this.tpArea = ""
             this.tpWorld = ""
+            this.active = true
 
             this.endArea = data.endArea || false
 
             this.tpArea = data.tpArea != undefined ? (data.tpArea == "_next" ? "_next" : (data.tpArea == "_prev" ? "_prev" : data.tpArea)) : this.area
+            this.tpWorld = data.tpWorld != undefined ? (data.tpWorld == "_next" ? "_next" : (data.tpWorld == "_prev" ? "_prev" : data.tpWorld)) : this.world
 
             if (this.tpArea == "_prev") {
                 if (this.areas.includes(this.area - 1)) {
@@ -49,8 +53,44 @@ export default class {
                 else this.tpArea = this.area
             }
             if (!this.areas.includes(this.tpArea)) this.tpArea = this.area
+            if (this.tpWorld == "_prev") {
+                let mapIndex = null
+                for (let i in this.worlds) {
+                    if (this.worlds[i] == this.world) {
+                        mapIndex = Math.trunc(i)
+                    }
+                }
+                if (mapIndex == 0) {
+                    this.tpWorld = this.worlds[Object.keys(this.worlds).length - 1]
+                } else {
+                    this.tpWorld = this.worlds[Number(mapIndex) - 1]
+                }
+            }
+            if (this.tpWorld == "_next") {
+                let mapIndex = null
+                for (let i in this.worlds) {
+                    if (this.worlds[i] == this.world) {
+                        mapIndex = Math.trunc(i)
+                    }
+                }
+                if (mapIndex == Object.keys(this.worlds).length - 1) {
+                    this.tpWorld = this.worlds[0]
+                } else {
+                    this.tpWorld = this.worlds[Number(mapIndex) + 1]
+                }
+            }
 
-            let areaSize = areasSize[this.tpArea] || new Vector(w, h)
+            let areaSize
+            if (this.tpWorld == undefined || this.tpArea == undefined || !this.worlds.includes(this.tpWorld)) {
+                areaSize = areaSizeS
+                if (!this.worlds.includes(this.tpWorld) && data.tpWorld) {
+                    this.tpWorld = this.world
+                    this.tpArea = this.area
+                    this.active = false
+                }
+            } else {
+                areaSize = new Vector(worldsSize[this.tpWorld][this.tpArea].width, worldsSize[this.tpWorld][this.tpArea].height)    
+            }
 
             if (data.translate != undefined)
                 this.translate = {
@@ -61,6 +101,7 @@ export default class {
                     sx: this.tileString(data.translate.sx, areaSize.x) || 0,
                     sy: this.tileString(data.translate.sy, areaSize.y) || 0,
                 }
+            console.log(this.translate)
         }
     }
 
@@ -171,7 +212,9 @@ export default class {
         if (this.type == "victory") {
             texture = textures["normal"]["teleport"].img
         } else if (this.type != "wall") {
-            texture = textures["normal"][this.type].img
+            try {
+                texture = textures["normal"][this.type].img
+            } catch { texture = "#333" }
         } else {
             texture = "#333"
         }

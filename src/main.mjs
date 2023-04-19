@@ -1,125 +1,23 @@
-import Player from "./logic/player.mjs"
 import addEventListeners from "./doc.mjs"
 import Vector from "./logic/vector.mjs"
-import World from "./logic/world.mjs"
+import Game from "./logic/game.mjs"
 import loadImg from "./imgl.mjs"
 
 let canvas = document.getElementById("canvas")
 let ctx = canvas.getContext("2d")
+
 let off = new Vector(-1280 / 2, -720 / 2)
 let fov = 1
 
-let world,
-    player
 
-let movement = {
-    u: false,
-    d: false,
-    l: false,
-    r: false,
-    s: false,
-    mouse: false,
-    mouX: 0,
-    mouY: 0,
-}
-
-let textures = loadImg()
-console.log(textures)
-
-let play = false
 let isActive = true
+
+let game
+let textures = loadImg()
 
 let lut = Date.now()
 addEventListeners(
     function (d) {
-        world = new World(d.world, d.survmode)
-        player = new Player(d.world.name, d.name, world.areas[1].size)
-        world.areas[player.area].load()
-        play = true
-        document.addEventListener('keydown', (e) => {
-            if (!movement.mouse && play) {
-                if (e.keyCode == 87 || e.keyCode == 38) movement.u = true
-                if (e.keyCode == 83 || e.keyCode == 40) movement.d = true
-                if (e.keyCode == 65 || e.keyCode == 37) movement.l = true
-                if (e.keyCode == 68 || e.keyCode == 39) movement.r = true
-                if (e.keyCode == 81) {
-                    if (!world.areasList.includes(player.area - 1)) return
-                    world.teleport(player, { area: player.area - 1 })
-                    let tX = 0, tY = 0
-
-                    let size = world.areas[player.area].size
-                    let position = world.areas[player.area].pos
-
-                    if (size.x > size.y) {
-                        tX = (5 * 32) + position.x
-                        tY = (size.y / 2) + position.y
-                    }
-                    if (size.y > size.x) {
-                        tX = (size.x / 2) + position.x
-                        tY = size.y - (5 * 32) + position.y
-                    }
-                    player.gPos.x = tX
-                    player.gPos.y = tY
-                }
-                if (e.keyCode == 69) {
-                    if (!world.areasList.includes(player.area + 1)) return
-                    world.teleport(player, { area: player.area + 1 })
-                    let tX = 0, tY = 0
-
-                    let size = world.areas[player.area].size
-                    let position = world.areas[player.area].pos
-
-                    if (size.x > size.y) {
-                        tX = (5 * 32) + position.x
-                        tY = (size.y / 2) + position.y
-                    }
-                    if (size.y > size.x) {
-                        tX = (size.x / 2) + position.x
-                        tY = size.y - (5 * 32) + position.y
-                    }
-                    player.gPos.x = tX
-                    player.gPos.y = tY
-                }
-                if (e.keyCode == 67) {
-                    player.noColide = !player.noColide
-                    if (player.noColide) player.color = "purple"
-                    else player.color = "red"
-                }
-                if (e.shiftKey) movement.s = true
-            }
-        })
-        document.addEventListener("keyup", (e) => {
-            if (!movement.mouse && play) {
-                if (e.keyCode == 87 || e.keyCode == 38) movement.u = false
-                if (e.keyCode == 83 || e.keyCode == 40) movement.d = false
-                if (e.keyCode == 65 || e.keyCode == 37) movement.l = false
-                if (e.keyCode == 68 || e.keyCode == 39) movement.r = false
-                if (!e.shiftKey) movement.s = false
-            }
-        })
-        document.addEventListener("mousemove", (e) => {
-            if (movement.mouse && play) {
-                movement.mouX =
-                    Math.round(
-                        (e.clientX - document.documentElement.clientWidth / 2) * 100
-                    ) / 100
-                movement.mouY =
-                    Math.round(
-                        (e.clientY - document.documentElement.clientHeight / 2) * 100
-                    ) / 100
-            }
-        })
-        document.addEventListener("mousedown", (e) => {
-            if (play)
-                movement.mouse = !movement.mouse
-        })
-        window.onblur = function () {
-            isActive = false
-        }
-        window.onfocus = function () {
-            isActive = true
-            lut = Date.now()
-        }
         /*canvas.addEventListener("wheel", e => {
             if (play) {
                 if (e.ctrlKey) return
@@ -127,6 +25,14 @@ addEventListeners(
                 fov /= m
             }
         })*/
+        game = new Game(d, textures)
+        window.onblur = function () {
+            isActive = false
+        }
+        window.onfocus = function () {
+            isActive = true
+            lut = Date.now()
+        }
     },
     function req() {
         requestAnimationFrame(req)
@@ -143,6 +49,8 @@ addEventListeners(
             ctx.fillRect(0, 0, 1280, 720)
             ctx.closePath()
 
+            off.x = game.player.pos.x - (1280 / 2)
+            off.y = game.player.pos.y - (720 / 2)
             for (let key in textures) {
                 let yoff = -24
                 let invFov = -fov + 2
@@ -164,20 +72,14 @@ addEventListeners(
                             })
                 }
             }
-
-            player.move(movement)
-            player.update(timeFix, delta)
-            world.update(timeFix, delta, player)
-            world.draw(ctx, off, fov, player, textures)
-
-            if (world.survmode) {
-                ctx.beginPath()
-                ctx.fillStyle = "#666"
-                ctx.font = "bold 16px Tahoma, Verdana, Segoe, sans-serif"
-                ctx.textAlign = "right"
-                ctx.fillText("Deaths: "+player.killCount, 80, 20)
-                ctx.closePath()
-            }
+            game.draw(ctx, off, fov)
+            game.update(timeFix, delta)
+            ctx.beginPath()
+            ctx.fillStyle = "#666"
+            ctx.font = "bold 16px Tahoma, Verdana, Segoe, sans-serif"
+            ctx.textAlign = "right"
+            ctx.fillText("Deaths: " + game.player.killCount, 80, 20)
+            ctx.closePath()
         }
     }
 )

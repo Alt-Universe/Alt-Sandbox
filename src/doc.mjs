@@ -1,99 +1,29 @@
 import { Entity, addEntity, removeEntity } from "./logic/entity.mjs"
-
+import Worlds from "./worlds.mjs"
 
 export default function (initFunction, animationFunction) {
 
-    let world = {
-        "1": {
-            "properties": {
-                "size": {
-                    "width": 80,
-                    "height": 16
+    let worlds = {}
+    for (let world in Worlds) {
+        worlds[world] = Worlds[world]
+    }
+    let worldsList = Object.keys(Worlds)
+
+    let worldsSize = {}
+    Object.keys(Worlds).forEach((val) => {
+        let world = Worlds[val]
+        worldsSize[val] = {}
+        for (let a in world) {
+            if (!!Number(a)) {
+                let area = world[a]
+                worldsSize[val][a] = {
+                    width: area.properties.size.width * 32,
+                    height: area.properties.size.height * 32
                 }
-            },
-            "zones": [
-                {
-                    "type": "safe",
-                    "x": 0,
-                    "y": 0,
-                    "w": "10t",
-                    "h": "16t",
-                    "mSpeed": 10
-                },
-                {
-                    "type": "safe",
-                    "x": "10tn",
-                    "y": "16tn",
-                    "w": "10t",
-                    "h": "16t"
-                },
-                {
-                    "type": "active",
-                    "x": "10t",
-                    "y": 0,
-                    "w": "60t",
-                    "h": "16t",
-                    "enemies": [
-                        {
-                            "type": [
-                                "shield",
-                                "pull",
-                                "push"
-                            ],
-                            "radius": 30,
-                            "speed": 4,
-                            "amount": 40
-                        }
-                    ]
-                },
-                {
-                    "type": "teleport",
-                    "x": "0t",
-                    "y": "14t",
-                    "w": "10t",
-                    "h": "2t",
-                    "tpWorld": "_next",
-                    "translate": {
-                        "x": 0,
-                        "cy": "2.5t"
-                    }
-                },
-                {
-                    "type": "teleport",
-                    "x": "0t",
-                    "y": "0t",
-                    "w": "10t",
-                    "h": "2t",
-                    "tpWorld": "_prev",
-                    "translate": {
-                        "x": 0,
-                        "cy": "2.5tn"
-                    }
-                },
-                {
-                    "type": "teleport",
-                    "x": "2tn",
-                    "y": "16tn",
-                    "w": "2t",
-                    "h": "16t",
-                    "tpArea": "_next",
-                    "translate": {
-                        "x": 160,
-                        "y": 0
-                    }
-                }
-            ]
-        },
-        "name": "Gooded Map",
-        "datas": {
-            "fillStyle": "#888",
-            "fillAlpha": 0.6,
-            "title": {
-                "fillStyle": "#fff",
-                "strokeStyle": "#969275"
             }
         }
-    }
+    })
+
 
     function readFile(file) {
         if (file == undefined) return
@@ -111,8 +41,23 @@ export default function (initFunction, animationFunction) {
                 var newArr = YAML.parse(lines)
                 map = newArr
             }
-            localStorage.oldFile = file
-            world = map
+            localStorage.oldFile = map
+            worlds = { [map.name]: map }
+            worldsList = Object.keys(Worlds)
+            let worldsSize = {}
+            Object.keys(worlds).forEach((val) => {
+                let world = worlds[val]
+                worldsSize[val] = {}
+                for (let a in world) {
+                    if (!!Number(a)) {
+                        let area = world[a]
+                        worldsSize[val][a] = {
+                            width: area.properties.size.width * 32,
+                            height: area.properties.size.height * 32
+                        }
+                    }
+                }
+            })
         }
         fr.readAsText(file)
     }
@@ -160,12 +105,12 @@ export default function (initFunction, animationFunction) {
         if (selectedFile != undefined) {
             readFile(selectedFile)
         }
-        let survMode = document.getElementById("survival-mode").checked
 
         initFunction({
             "name": document.getElementById("game-name").value || randomNames[Math.floor(Math.random() * randomNames.length)],
-            "world": world,
-            "survmode": survMode
+            "worlds": worlds,
+            "worldsList": worldsList,
+            "worldsSize": worldsSize
         })
         requestAnimationFrame(animationFunction)
     }
