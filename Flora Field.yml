@@ -1,0 +1,2401 @@
+"1":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 20
+          speed: 1
+          amount: 20
+        - type: star
+          radius: 20
+          speed: 120
+          amount: 5
+        - type: toxic
+          radius: 20
+          speed: 3
+          amount: 3
+          aura: 150
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+      mSpeed: 10
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 13t
+      w: 10t
+      h: 2t
+      tpWorld: "_next"
+      translate:
+        x: 0
+        cy: 2.5t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 2t
+      tpWorld: "_prev"
+      translate:
+        x: 0
+        cy: 2.5tn
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"2":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 20
+          speed: 1
+          amount: 20
+        - type: star
+          radius: 20
+          speed: 120
+          amount: 8
+        - type: toxic
+          radius: 20
+          speed: 3
+          amount: 4
+          aura: 150
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"3":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 20
+          speed: 1
+          amount: 20
+        - type: star
+          radius: 20
+          speed: 120
+          amount: 12
+        - type: toxic
+          radius: 20
+          speed: 3
+          amount: 6
+          aura: 150
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"4":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 20
+          speed: 1
+          amount: 20
+        - type: star
+          radius: 30
+          speed: 90
+          amount: 5
+        - type: star
+          radius: 15
+          speed: 120
+          amount: 10
+        - type: toxic
+          radius: 20
+          speed: 3
+          amount: 6
+          aura: 150
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"5":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 20
+          speed: 1
+          amount: 20
+        - type: star
+          radius: 40
+          speed: 120
+          amount: 4
+        - type: star
+          radius: 20
+          speed: 120
+          amount: 10
+        - type: toxic
+          radius: 20
+          speed: 3
+          amount: 6
+          aura: 150
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"6":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 20
+          speed: 1
+          amount: 20
+        - type: star
+          radius: 20
+          speed: 90
+          amount: 10
+        - type: star
+          radius: 10
+          speed: 105
+          amount: 15
+        - type: toxic
+          radius: 20
+          speed: 3
+          amount: 8
+          aura: 150
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"7":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 20
+          speed: 1
+          amount: 20
+        - type: star
+          radius: 50
+          speed: 135
+          amount: 8
+        - type: toxic
+          radius: 20
+          speed: 3
+          amount: 8
+          aura: 150
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"8":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 20
+          speed: 1
+          amount: 20
+        - type: star
+          radius: 45
+          speed: 90
+          amount: 6
+        - type: star
+          radius: 30
+          speed: 105
+          amount: 10
+        - type: star
+          radius: 15
+          speed: 120
+          amount: 15
+        - type: toxic
+          radius: 20
+          speed: 3
+          amount: 10
+          aura: 150
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"9":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 20
+          speed: 1
+          amount: 20
+        - type: star
+          radius: 45
+          speed: 135
+          amount: 4
+        - type: star
+          radius: 15
+          speed: 120
+          amount: 20
+        - type: toxic
+          radius: 20
+          speed: 3
+          amount: 10
+          aura: 150
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"10":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 20
+          speed: 1
+          amount: 20
+        - type: star
+          radius: 15
+          speed: 75
+          amount: 25
+        - type: star
+          radius: 120
+          speed: 180
+          amount: 2
+        - type: toxic
+          radius: 60
+          speed: 3
+          amount: 2
+          aura: 345
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"11":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 20
+          speed: 1
+          amount: 30
+        - type: wind
+          radius: 15
+          speed: 4
+          amount: 10
+        - type: sizer
+          radius: 20
+          speed: 3
+          amount: 4
+        - type: slower
+          radius: 20
+          speed: 3
+          amount: 4
+          aura: 150
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"12":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 20
+          speed: 1
+          amount: 30
+        - type: wind
+          radius: 15
+          speed: 4
+          amount: 10
+        - type: sizer
+          radius: 20
+          speed: 3
+          amount: 8
+        - type: slower
+          radius: 20
+          speed: 3
+          amount: 6
+          aura: 150
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"13":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 20
+          speed: 1
+          amount: 30
+        - type: wind
+          radius: 15
+          speed: 4
+          amount: 15
+        - type: sizer
+          radius: 20
+          speed: 3
+          amount: 12
+        - type: slower
+          radius: 20
+          speed: 3
+          amount: 8
+          aura: 150
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"14":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 20
+          speed: 1
+          amount: 30
+        - type: wind
+          radius: 15
+          speed: 4
+          amount: 18
+        - type: sizer
+          radius: 20
+          speed: 3
+          amount: 16
+        - type: slower
+          radius: 20
+          speed: 3
+          amount: 10
+          aura: 150
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"15":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 20
+          speed: 1
+          amount: 30
+        - type: wind
+          radius: 15
+          speed: 4
+          amount: 20
+        - type: sizer
+          radius: 30
+          speed: 4
+          amount: 5
+        - type: sizer
+          radius: 15
+          speed: 2
+          amount: 10
+        - type: slower
+          radius: 20
+          speed: 3
+          amount: 12
+          aura: 150
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"16":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 20
+          speed: 1
+          amount: 30
+        - type: wind
+          radius: 15
+          speed: 4
+          amount: 20
+        - type: sizer
+          radius: 40
+          speed: 3
+          amount: 6
+        - type: sizer
+          radius: 20
+          speed: 2
+          amount: 12
+        - type: slower
+          radius: 20
+          speed: 3
+          amount: 10
+          aura: 150
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"17":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 20
+          speed: 1
+          amount: 30
+        - type: wind
+          radius: 15
+          speed: 4
+          amount: 20
+        - type: sizer
+          radius: 45
+          speed: 2
+          amount: 4
+        - type: sizer
+          radius: 30
+          speed: 3
+          amount: 8
+        - type: sizer
+          radius: 15
+          speed: 4
+          amount: 12
+        - type: slower
+          radius: 20
+          speed: 3
+          amount: 4
+          aura: 150
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"18":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 20
+          speed: 1
+          amount: 30
+        - type: wind
+          radius: 30
+          speed: 7
+          amount: 10
+        - type: sizer
+          radius: 50
+          speed: 4
+          amount: 4
+        - type: sizer
+          radius: 30
+          speed: 3
+          amount: 6
+        - type: slower
+          radius: 20
+          speed: 3
+          amount: 12
+          aura: 150
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"19":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 20
+          speed: 1
+          amount: 30
+        - type: wind
+          radius: 45
+          speed: 4
+          amount: 7
+        - type: sizer
+          radius: 45
+          speed: 3
+          amount: 15
+        - type: slower
+          radius: 20
+          speed: 1
+          amount: 20
+          aura: 150
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"20":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 20
+          speed: 1
+          amount: 30
+        - type: wind
+          radius: 15
+          speed: 4
+          amount: 20
+        - type: sizer
+          radius: 15
+          speed: 2
+          amount: 25
+        - type: sizer
+          radius: 90
+          speed: 4
+          amount: 2
+        - type: slower
+          radius: 75
+          speed: 5
+          amount: 3
+          aura: 450
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"21":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 20
+          speed: 1
+          amount: 35
+        - type: sniper
+          radius: 20
+          speed: 2
+          amount: 2
+        - type: warpe
+          radius: 20
+          speed: 3
+          amount: 6
+        - type: draining
+          radius: 20
+          speed: 3
+          amount: 4
+          aura: 150
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"22":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 20
+          speed: 1
+          amount: 35
+        - type: sniper
+          radius: 20
+          speed: 2
+          amount: 4
+        - type: warpe
+          radius: 20
+          speed: 3
+          amount: 10
+        - type: draining
+          radius: 20
+          speed: 3
+          amount: 6
+          aura: 150
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"23":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 20
+          speed: 1
+          amount: 35
+        - type: sniper
+          radius: 20
+          speed: 2
+          amount: 6
+        - type: warpe
+          radius: 20
+          speed: 3
+          amount: 16
+        - type: draining
+          radius: 20
+          speed: 3
+          amount: 8
+          aura: 150
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"24":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 20
+          speed: 1
+          amount: 35
+        - type: sniper
+          radius: 20
+          speed: 2
+          amount: 10
+        - type: warpe
+          radius: 20
+          speed: 3
+          amount: 22
+        - type: draining
+          radius: 20
+          speed: 3
+          amount: 10
+          aura: 150
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"25":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 20
+          speed: 1
+          amount: 35
+        - type: sniper
+          radius: 30
+          speed: 2
+          amount: 6
+        - type: warpe
+          radius: 30
+          speed: 3
+          amount: 18
+        - type: draining
+          radius: 20
+          speed: 3
+          amount: 10
+          aura: 150
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"26":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 20
+          speed: 1
+          amount: 35
+        - type: sniper
+          radius: 30
+          speed: 2
+          amount: 15
+        - type: warpe
+          radius: 45
+          speed: 3
+          amount: 7
+        - type: warpe
+          radius: 25
+          speed: 2
+          amount: 14
+        - type: draining
+          radius: 20
+          speed: 3
+          amount: 10
+          aura: 150
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"27":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 20
+          speed: 1
+          amount: 35
+        - type: sniper
+          radius: 20
+          speed: 2
+          amount: 15
+        - type: warpe
+          radius: 40
+          speed: 3
+          amount: 20
+        - type: draining
+          radius: 20
+          speed: 3
+          amount: 12
+          aura: 150
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"28":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 20
+          speed: 1
+          amount: 35
+        - type: sniper
+          radius: 25
+          speed: 4
+          amount: 12
+        - type: warpe
+          radius: 45
+          speed: 3
+          amount: 6
+        - type: warpe
+          radius: 30
+          speed: 4
+          amount: 10
+        - type: warpe
+          radius: 15
+          speed: 5
+          amount: 15
+        - type: draining
+          radius: 20
+          speed: 3
+          amount: 12
+          aura: 150
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"29":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 20
+          speed: 1
+          amount: 35
+        - type: sniper
+          radius: 15
+          speed: 2
+          amount: 8
+        - type: sniper
+          radius: 30
+          speed: 2
+          amount: 6
+        - type: warpe
+          radius: 60
+          speed: 3
+          amount: 12
+        - type: draining
+          radius: 20
+          speed: 3
+          amount: 14
+          aura: 150
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"30":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 30
+          speed: 1
+          amount: 35
+        - type: sniper
+          radius: 45
+          speed: 2
+          amount: 2
+        - type: warpe
+          radius: 90
+          speed: 5
+          amount: 3
+        - type: warpe
+          radius: 20
+          speed: 2
+          amount: 25
+        - type: draining
+          radius: 75
+          speed: 5
+          amount: 3
+          aura: 420
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"31":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 30
+          speed: 1
+          amount: 35
+        - type: flame
+          radius: 20
+          speed: 3
+          amount: 2
+        - type: dasher
+          radius: 20
+          speed: 3
+          amount: 4
+        - type: pull
+          radius: 20
+          speed: 3
+          amount: 3
+          aura: 150
+          power: 2.5
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"32":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 30
+          speed: 1
+          amount: 35
+        - type: flame
+          radius: 20
+          speed: 3
+          amount: 4
+        - type: dasher
+          radius: 20
+          speed: 3
+          amount: 7
+        - type: pull
+          radius: 20
+          speed: 3
+          amount: 5
+          aura: 150
+          power: 2.5
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"33":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 30
+          speed: 1
+          amount: 35
+        - type: flame
+          radius: 20
+          speed: 3
+          amount: 6
+        - type: dasher
+          radius: 20
+          speed: 3
+          amount: 10
+        - type: pull
+          radius: 20
+          speed: 3
+          amount: 6
+          aura: 150
+          power: 2.5
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"34":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 30
+          speed: 1
+          amount: 35
+        - type: flame
+          radius: 30
+          speed: 2
+          amount: 3
+        - type: flame
+          radius: 10
+          speed: 5
+          amount: 3
+        - type: dasher
+          radius: 20
+          speed: 3
+          amount: 14
+        - type: pull
+          radius: 20
+          speed: 3
+          amount: 7
+          aura: 150
+          power: 2.5
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"35":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 30
+          speed: 1
+          amount: 35
+        - type: flame
+          radius: 50
+          speed: 3
+          amount: 4
+        - type: dasher
+          radius: 30
+          speed: 4
+          amount: 12
+        - type: pull
+          radius: 20
+          speed: 3
+          amount: 10
+          aura: 150
+          power: 2.5
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"36":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 30
+          speed: 1
+          amount: 35
+        - type: flame
+          radius: 30
+          speed: 2
+          amount: 7
+        - type: dasher
+          radius: 30
+          speed: 5
+          amount: 10
+        - type: pull
+          radius: 20
+          speed: 3
+          amount: 10
+          aura: 150
+          power: 2.5
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"37":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 30
+          speed: 1
+          amount: 35
+        - type: flame
+          radius: 20
+          speed: 6
+          amount: 4
+        - type: dasher
+          radius: 15
+          speed: 3
+          amount: 5
+        - type: dasher
+          radius: 30
+          speed: 2
+          amount: 10
+        - type: pull
+          radius: 20
+          speed: 3
+          amount: 10
+          aura: 150
+          power: 2.5
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"38":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 30
+          speed: 1
+          amount: 35
+        - type: flame
+          radius: 45
+          speed: 3
+          amount: 3
+        - type: flame
+          radius: 30
+          speed: 3
+          amount: 6
+        - type: flame
+          radius: 15
+          speed: 3
+          amount: 10
+        - type: dasher
+          radius: 50
+          speed: 5
+          amount: 4
+        - type: pull
+          radius: 20
+          speed: 3
+          amount: 10
+          aura: 150
+          power: 2.5
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"39":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 30
+          speed: 1
+          amount: 35
+        - type: flame
+          radius: 30
+          speed: 5
+          amount: 4
+        - type: flame
+          radius: 15
+          speed: 5
+          amount: 7
+        - type: dasher
+          radius: 30
+          speed: 5
+          amount: 5
+        - type: dasher
+          radius: 15
+          speed: 5
+          amount: 12
+        - type: pull
+          radius: 20
+          speed: 3
+          amount: 10
+          aura: 150
+          power: 2.5
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"40":
+  properties:
+    size:
+      width: 80
+      height: 15
+  zones:
+    - type: active
+      x: 10t
+      "y": 0t
+      w: 60t
+      h: 15t
+      enemies:
+        - type: grass
+          radius: 30
+          speed: 1
+          amount: 35
+        - type: flame
+          radius: 105
+          speed: 3
+          amount: 2
+        - type: dasher
+          radius: 105
+          speed: 3
+          amount: 2
+        - type: dasher
+          radius: 15
+          speed: 1
+          amount: 20
+        - type: pull
+          radius: 20
+          speed: 3
+          amount: 3
+          aura: 450
+          power: 2.5
+    - type: safe
+      x: 0t
+      "y": 0t
+      w: 10t
+      h: 15t
+    - type: safe
+      x: 10tn
+      "y": 15tn
+      w: 10t
+      h: 15t
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: teleport
+      x: 2tn
+      "y": 15tn
+      w: 2t
+      h: 15t
+      tpArea: "_next"
+      translate:
+        x: 160
+        y: 0
+"41":
+  properties:
+    size:
+      width: 80
+      height: 15
+    area-name: 'Victory!'
+    msg: 'you finished Verdant Valley! 2 VP awaeded'
+  zones:
+    - type: teleport
+      x: 0t
+      "y": 0t
+      w: 2t
+      h: 15t
+      tpArea: "_prev"
+      translate:
+        x: -160
+        y: 0
+    - type: victory
+      x: 2t
+      y: 0
+      w: 2tn
+      h: 0tn
+      award:
+        vp: 2
+    - type: teleport
+      x: 2tn
+      y: 0t
+      w: 2t
+      h: 15t
+      endArea: true
+name: Flora Field
+datas:
+  fillStyle: "#004524"
+  fillAlpha: 0.32
+  ColorCL: "#2E8B57"
+  title:
+    fillStyle: "#FFFFFF"
+    strokeStyle: "#004524"
+  area:
+    zones:
+      saveColor: "#008000"
