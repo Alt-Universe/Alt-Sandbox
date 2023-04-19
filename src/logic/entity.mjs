@@ -15,6 +15,8 @@ class Entity {
         this.color = "#333"
         this.auraColor = this.color
         this.speedMultiplier = 1
+        this.survmode = data.survmode
+        this.mirage = data.mirage || false
 
         this.angle = Math.random()
 
@@ -82,15 +84,6 @@ class Entity {
     }
 
     draw(ctx, off, fov) {
-        if (this.aura != 0) {
-            ctx.beginPath()
-            ctx.fillStyle = this.auraColor
-            ctx.globalAlpha = this.auraAlpha || 0.15
-            ctx.strokeStyle = "#111"
-            ctx.arc((this.pos.x - off.x) / fov, (this.pos.y - off.y) / fov, this.aura, 0, 3.145 * 2)
-            ctx.fill()
-            ctx.closePath()
-        }
         ctx.beginPath()
         ctx.fillStyle = this.color
         ctx.globalAlpha = this.alpha != 1 ? this.alpha : (this.harmless ? 0.4 : 1)
@@ -100,6 +93,18 @@ class Entity {
         ctx.fill()
         ctx.stroke()
         ctx.closePath()
+    }
+
+    drawAura(ctx, off, fov) {
+        if (this.aura != 0) {
+            ctx.beginPath()
+            ctx.fillStyle = this.auraColor
+            ctx.globalAlpha = this.auraAlpha || 0.15
+            ctx.strokeStyle = "#111"
+            ctx.arc((this.pos.x - off.x) / fov, (this.pos.y - off.y) / fov, this.aura, 0, 3.145 * 2)
+            ctx.fill()
+            ctx.closePath()
+        }
     }
 
     update(timeFix, delta, player) {
@@ -156,17 +161,19 @@ class Entity {
     }
 
     interact(player, data) {
-        /*if (!player.god && !this.mirage) {
+        if (!this.mirage && this.survmode) {
             if (this.d(player.pos.x, player.pos.y, this.pos.x, this.pos.y) <= this.radius + player.radius && !player.onSafe && !this.harmless) {
-                
+                player.kill()
             }
             if (this.aura != undefined && this.aura > 0) {
                 if (this.d(player.pos.x, player.pos.y, this.pos.x, this.pos.y) <= this.aura + player.radius && !player.onSafe) {
                     this.auraEffect(player, data)
                 }
             }
-        }*/
+        }
     }
+
+    auraEffect(player, data) { }
 
     interractWall(zone) {
         let { radius } = this
@@ -224,21 +231,37 @@ class Bullet extends Entity {
         this.color = "#A05353"
         this.timer = 0
         this.releaseTime = 3000
+        this.wind = false
+        this.gravity = 64 / 32
     }
 
     behavior(timeFix, delta) {
         this.timer += delta
-        console.log(this.timer)
         if (this.timer > this.releaseTime) {
             this.toRemove = true
         }
     }
 
-    interact(player) {
+    interact(player, data) {
         if (!player.onSafe) {
             if (this.d(player.pos.x, player.pos.y, this.pos.x, this.pos.y) <= this.radius + player.radius && !player.onSafe) {
-                player.kill()
-                this.toRemove = true
+                if (!this.wind) {
+                    !this.mirage ? player.kill() : 'none'
+                    this.toRemove = true
+                } else {
+                    while (this.d(player.pos.x, player.pos.y, this.pos.x, this.pos.y) < player.radius + this.radius) {
+                        let dx = player.pos.x - this.pos.x
+                        let dy = player.pos.y - this.pos.y
+                        let dist = this.d(player.pos.x, player.pos.y, this.pos.x, this.pos.y)
+                        let attractAmplitude = Math.pow(2, -(dist / (this.radius / 2)))
+                        let moveDist = this.gravity * attractAmplitude
+                        let angle = Math.atan2(dy, dx)
+                        let timeFix = data.timeFix
+                        player.pos.x += (moveDist * Math.cos(angle)) * timeFix
+                        player.pos.y += (moveDist * Math.sin(angle)) * timeFix
+                        player.posToGlobal()
+                    }
+                }
             }
         }
     }
@@ -380,6 +403,10 @@ let enemiesTypes = {
             this.aura = data.aura != undefined ? data.aura : 150
             this.auraColor = "red"
         }
+
+        auraEffect(player, data) {
+            player.speedMultiplier *= 0.7
+        }
     },
     "draining": class Draining extends Entity {
         constructor(data) {
@@ -396,6 +423,10 @@ let enemiesTypes = {
             this.auraAlpha = 0.3
             this.aura = data.aura != undefined ? data.aura : 90
             this.auraColor = this.color
+        }
+
+        auraEffect(player, data) {
+            player.speedMultiplier *= 0.2
         }
     },
     "disabler": class Disabler extends Entity {
@@ -1334,6 +1365,10 @@ let enemiesTypes = {
             this.auraColor = "rgb(41, 255, 198)"
             this.aura = data.aura != undefined ? data.aura : 90
         }
+
+        auraEffect(player, data) {
+            player.addEffect("shield", true)
+        }
     },
     "tree": class Tree extends Entity {
         constructor(data) {
@@ -1415,6 +1450,19 @@ let enemiesTypes = {
             this.color = "#78148C"
             this.auraColor = this.color
             this.aura = data.aura != undefined ? data.aura : 150
+            this.gravity = data.power || 2.5
+        }
+
+        auraEffect(player, data) {
+            let dx = player.pos.x - this.pos.x
+            let dy = player.pos.y - this.pos.y
+            let dist = this.d(player.pos.x, player.pos.y, this.pos.x, this.pos.y)
+            let attractAmplitude = Math.pow(2, -(dist / 120))
+            let moveDist = this.gravity * attractAmplitude
+            let angle = Math.atan2(dy, dx)
+            let timeFix = data.timeFix
+            player.gPos.x -= (moveDist * Math.cos(angle)) * timeFix
+            player.gPos.y -= (moveDist * Math.sin(angle)) * timeFix
         }
     },
     "push": class Push extends Entity {
@@ -1423,6 +1471,19 @@ let enemiesTypes = {
             this.color = "#7B9DB2"
             this.auraColor = this.color
             this.aura = data.aura != undefined ? data.aura : 150
+            this.gravity = data.power || 2.5
+        }
+
+        auraEffect(player, data) {
+            let dx = player.pos.x - this.pos.x
+            let dy = player.pos.y - this.pos.y
+            let dist = this.d(player.pos.x, player.pos.y, this.pos.x, this.pos.y)
+            let attractAmplitude = Math.pow(2, -(dist / 120))
+            let moveDist = this.gravity * attractAmplitude
+            let angle = Math.atan2(dy, dx)
+            let timeFix = data.timeFix
+            player.gPos.x += (moveDist * Math.cos(angle)) * timeFix
+            player.gPos.y += (moveDist * Math.sin(angle)) * timeFix
         }
     },
     "slippery": class Slippery extends Entity {
@@ -1441,6 +1502,10 @@ let enemiesTypes = {
             this.auraColor = this.color
             this.auraAlpha = 0.5
             this.aura = data.aura != undefined ? data.aura : 150
+        }
+
+        auraEffect(player, data) {
+            player.addEffect("enlarging", true)
         }
     },
     "zigzag": class Zigzag extends Entity {
@@ -1515,6 +1580,7 @@ let enemiesTypes = {
                         spawner: this.spawner
                     })
                     bullet.color = "#FF9000"
+                    bullet.mirage = true
                     bullet.vel.x = Math.cos(angl) * bullet.speed
                     bullet.vel.y = Math.sin(angl) * bullet.speed
 
@@ -1556,6 +1622,7 @@ let enemiesTypes = {
                         speed: 10,
                         spawner: this.spawner
                     })
+                    bullet.mirage = true
                     bullet.color = "#00CC8E"
                     bullet.vel.x = Math.cos(angl) * bullet.speed
                     bullet.vel.y = Math.sin(angl) * bullet.speed
@@ -1758,6 +1825,7 @@ let enemiesTypes = {
                         speed: 10,
                         spawner: this.spawner
                     })
+                    bullet.wind = true
                     bullet.color = "#9de3c6"
                     bullet.vel.x = Math.cos(angl) * bullet.speed
                     bullet.vel.y = Math.sin(angl) * bullet.speed

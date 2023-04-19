@@ -3,7 +3,7 @@ import Vector from "./vector.mjs"
 import { enemiesTypes } from "./entity.mjs"
 
 export default class {
-    constructor(data, mdata, vec, id, areas, areasSize) {
+    constructor(data, mdata, vec, id, areas, areasSize, survmode) {
         this.id = id
         this.ajson = data
         this.mjson = mdata
@@ -15,6 +15,7 @@ export default class {
         this.entities = {}
         this.zones = {}
         this.entId = 0
+        this.survmode = survmode
     }
 
     unload() {
@@ -22,16 +23,27 @@ export default class {
         this.zones = {}
     }
 
-    draw(ctx, off, fov, textures) {
+    draw(ctx, off, fov, textures, player) {
         let fillStyle = this.ajson.properties.fillStyle || this.mjson.datas.fillStyle
         for (let z in this.zones) {
-            this.zones[z].draw(ctx, off, fov, textures)
+            if (this.zones[z].type != "wall")
+                this.zones[z].draw(ctx, off, fov, textures)
         }
         ctx.beginPath()
         ctx.globalAlpha = this.mjson.datas.fillAlpha || 0.19
         ctx.fillStyle = fillStyle
         ctx.fillRect((-off.x) / fov, (-off.y) / fov, (this.size.x) / fov, (this.size.y) / fov)
         ctx.closePath()
+        for (let z in this.zones) {
+            if (this.zones[z].type == "wall")
+                this.zones[z].draw(ctx, off, fov, textures)
+        }
+        player.draw(ctx, off, fov)
+        for (let e in this.entities) {
+            if (this.entities[e].aura != 0) {
+                this.entities[e].drawAura(ctx, off, fov)
+            }
+        }
         for (let e in this.entities) {
             this.entities[e].draw(ctx, off, fov)
         }
@@ -73,6 +85,7 @@ export default class {
                             amount: enemie.amount,
                             num: i,
                             dir: dir,
+                            survmode: this.survmode,
                             ...enemie
                         })
                         this.entId++

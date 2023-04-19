@@ -2,11 +2,12 @@ import Vector from "./vector.mjs"
 import Area from "./area.mjs"
 
 export default class {
-    constructor(data) {
+    constructor(data, survmode) {
         this.mjson = data
 
         this.areas = {}
         this.acc = new Vector(0, 0)
+        this.survmode = survmode
 
         this.areasList = []
         Object.keys(this.mjson).forEach(val => {
@@ -28,7 +29,9 @@ export default class {
         let area = this.areas[player.area]
         player.colide({ x: area.pos.x, y: area.pos.y, w: area.size.x, h: area.size.y })
         let ajson = area.ajson
-        area.draw(ctx, off, fov, textures)
+        off.x = player.pos.x - (1280 / 2)
+        off.y = player.pos.y - (720 / 2)
+        area.draw(ctx, off, fov, textures, player)
         ctx.beginPath()
         ctx.fillStyle = this.mjson.datas.title.fillStyle
         ctx.strokeStyle = this.mjson.datas.title.strokeStyle
@@ -129,6 +132,8 @@ export default class {
             this.areas[player.area].pos.x,
             this.areas[player.area].pos.y
         )
+        player.pos.x = player.gPos.x - player.aPos.x
+        player.pos.y = player.gPos.y - player.aPos.y
         player.aSize = this.areas[player.area].size
         this.areas[area].load()
     }
@@ -174,7 +179,7 @@ export default class {
                     this.acc.x = this.tileString(this.mjson[val].properties.position.x, this.mjson[val].properties.size.width)
                     this.acc.y = this.tileString(this.mjson[val].properties.position.y, this.mjson[val].properties.size.height)
                 }
-                this.areas[val] = new Area(this.mjson[val], this.mjson, vec, val, this.areasList, this.areasSize)
+                this.areas[val] = new Area(this.mjson[val], this.mjson, vec, val, this.areasList, this.areasSize, this.survmode)
                 lpx += this.mjson[val].properties.size.width * 32
             }
         })

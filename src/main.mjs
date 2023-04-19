@@ -32,7 +32,7 @@ let isActive = true
 let lut = Date.now()
 addEventListeners(
     function (d) {
-        world = new World(d.world)
+        world = new World(d.world, d.survmode)
         player = new Player(d.world.name, d.name, world.areas[1].size)
         world.areas[player.area].load()
         play = true
@@ -167,12 +167,17 @@ addEventListeners(
 
             player.move(movement)
             player.update(timeFix, delta)
-            world.draw(ctx, off, fov, player, textures)
             world.update(timeFix, delta, player)
+            world.draw(ctx, off, fov, player, textures)
 
-            off.x = player.pos.x - (1280 / 2)
-            off.y = player.pos.y - (720 / 2)
-            player.draw(ctx, off, fov)
+            if (world.survmode) {
+                ctx.beginPath()
+                ctx.fillStyle = "#666"
+                ctx.font = "bold 16px Tahoma, Verdana, Segoe, sans-serif"
+                ctx.textAlign = "right"
+                ctx.fillText("Deaths: "+player.killCount, 80, 20)
+                ctx.closePath()
+            }
         }
     }
 )

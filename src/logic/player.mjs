@@ -4,28 +4,37 @@ export default class {
     constructor(world, name, aSize) {
         this.world = world
         this.area = 1
-        this.gPos = new Vector(0, 0)
+        this.gPos = new Vector((Math.random() * 10*32) + 2*32, (Math.random() * 10*32) + 2*32)
         this.aPos = new Vector(0, 0)
         this.aSize = aSize
-        this.pos = new Vector(0, 0)
+        this.pos = new Vector(this.gPos.x-this.aPos.x, this.gPos.y-this.aPos.y)
 
         this.vel = new Vector(0, 0)
         this.acc = new Vector(0, 0)
 
         this.friction = 0.75
+        this.radiusMultipler = 1
         this.color = "red"
         this.name = name
         this.radius = 14.5
+        this.baseRadius = 14.5
         this.speed = 17
+        this.killCount = 0
+        this.god = false
+        this.noKill = false
 
         this.dmp = new Vector(0, 0)
         this.noColide = false
+        this.radiusMultipler = 1
+
+        //Effects
+        this.effects = {}
     }
 
     draw(ctx, off, fov) {
         ctx.beginPath()
         ctx.globalAlpha = 1
-        ctx.fillStyle = this.color
+        ctx.fillStyle = this.god ? "#8100C6" : this.color
         ctx.lineWidth = 1
         ctx.arc((this.pos.x - off.x) / fov, (this.pos.y - off.y) / fov, (this.radius) / fov, 0, 3.145 * 2);
         ctx.fill()
@@ -36,7 +45,7 @@ export default class {
         ctx.textAlign = "center"
         ctx.lineWidth = (1) / fov
         ctx.globalAlpha = 1
-        ctx.font = `${12/fov}px Tahoma, Verdana, Segoe, sans-serif`
+        ctx.font = `${12 / fov}px Tahoma, Verdana, Segoe, sans-serif`
         ctx.fillText(this.name, (this.pos.x - off.x) / fov, (this.pos.y - (this.radius + 2) - off.y) / fov)
         ctx.closePath()
     }
@@ -47,12 +56,28 @@ export default class {
     }
 
     update(timeFix, delta) {
+        let speed = this.speed+0
         if (Math.abs(this.vel.x) > 0.1) {
             this.vel.x = 0
         }
         if (Math.abs(this.vel.y) > 0.1) {
             this.vel.y = 0
         }
+
+        if (!this.god) {
+            if (this.effects["enlarging"] != undefined) {
+                this.radiusMultipler = 1.66
+            }
+            if (this.effects["slower"] != undefined) {
+                this.speedMultipler *= 0.7
+            }
+            if (this.effects["freezing"] != undefined) {
+                this.speedMultipler *= 0.2
+            }
+        }
+        
+        speed *= this.speedMultipler
+        this.radius *= this.radiusMultipler
 
         let slide = [this.dmp.x + 0, this.dmp.y + 0]
 
@@ -81,6 +106,22 @@ export default class {
 
         this.acc.x = 0
         this.acc.y = 0
+        this.noKill = false
+
+        Object.keys(this.effects).forEach((name, index, array) => {
+            if (typeof this.effects[name] == "number") {
+                if (this.effects[name] > 0) {
+                    this.effects[name] -= delta / 1000
+                } else {
+                    delete this.effects[name]
+                }
+            } else {
+                delete this.effects[name]
+            }
+        })
+        this.speedMultipler = 1
+        this.radiusMultipler = 1
+        this.radius = this.baseRadius
     }
 
     move(movement) {
@@ -123,7 +164,29 @@ export default class {
         }
     }
 
-    kill() {}
+    kill() {
+        if (!this.god && !this.noKill && this.effects["shield"] == undefined) {
+            let tX = 0, tY = 0
+
+            let size = this.aSize
+            let position = this.aPos
+
+            if (size.x > size.y) {
+                tX = (5 * 32) + position.x
+                tY = (size.y / 2) + position.y
+            }
+            if (size.y > size.x) {
+                tX = (size.x / 2) + position.x
+                tY = size.y - (5 * 32) + position.y
+            }
+            this.gPos.x = tX
+            this.gPos.y = tY
+            this.killCount+=1
+            this.noKill = true
+        }
+    }
+
+    addEffect(eff, data) {this.effects[eff] = data}
 
     colide(boundary) {
         let x = boundary.x

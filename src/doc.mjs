@@ -160,10 +160,12 @@ export default function (initFunction, animationFunction) {
         if (selectedFile != undefined) {
             readFile(selectedFile)
         }
+        let survMode = document.getElementById("survival-mode").checked
 
         initFunction({
             "name": document.getElementById("game-name").value || randomNames[Math.floor(Math.random() * randomNames.length)],
-            "world": world
+            "world": world,
+            "survmode": survMode
         })
         requestAnimationFrame(animationFunction)
     }
